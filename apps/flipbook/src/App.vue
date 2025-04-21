@@ -6,7 +6,7 @@ const flipbookOptions = {
   backgroundColor: '#ffffff',
   viewerType: 'flipbook',
   is3D: true,
-  source: '/pdf/the-three-musketeers.pdf', // Update this path to your PDF source
+  source: '../pdf/the-three-musketeers.pdf', // Update this path to your PDF source
 
   // Control settings
   autoEnableOutline: false,
