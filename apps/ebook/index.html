@@ -1,31 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8">
-  <title>PDF</title>
-  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-  
-  <!-- Flipbook StyleSheet -->
-  <link href="dflip/css/dflip.min.css" rel="stylesheet" type="text/css">
-  <!-- Icons Stylesheet -->
-  <link href="dflip/css/themify-icons.min.css" rel="stylesheet" type="text/css">
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      text-decoration: underline;
+    }
+    .subject-list {
+      max-width: 500px;
+      margin: auto;
+    }
+    .subject-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 10px 0;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+    .btn {
+      padding: 8px 16px;
+      background-color: #8bc34a;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+    .btn:hover {
+      background-color: #689f38;
+    }
+  </style>
 </head>
 <body>
-  <div class="pt-12 pb-8">
-				<a href=" agronomy.html"
-				<button class="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-full">
-				  Agronomy 
-				</button> </a>
-  </br>
-    			<a href="sociology.html"
-				<button class="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-full">
-				  Sociology
-				</button> </a>
+
+  <h2>Books, Journals and Assignments</h2>
+  <div class="subject-list">
+    <div class="subject-row">
+      <span>1. Fundamentals of Agronomy</span>
+      <a href="agronomy.html" class="btn">Open</a>
+    </div>
+    <div class="subject-row">
+      <span>2. Science</span>
+      <a href="#" class="btn">Open</a>
+    </div>
+    <div class="subject-row">
+      <span>3. Rural Sociology & educational psychology</span>
+      <a href="sociology.html" class="btn">Open</a>
+    </div>
+    <div class="subject-row">
+      <span>4. Nepali</span>
+      <a href="#" class="btn">Open</a>
+    </div>
+    <div class="subject-row">
+      <span>5. English</span>
+      <a href="#" class="btn">Open</a>
+    </div>
+    <div class="subject-row">
+      <span>6. Computer</span>
+      <a href="#" class="btn">Open</a>
+    </div>
+    <div class="subject-row">
+      <span>7. Environment</span>
+      <a href="#" class="btn">Open</a>
+    </div>
+    <div class="subject-row">
+      <span>8. Hindi</span>
+      <a href="#" class="btn">Open</a>
+    </div>
   </div>
 
 </body>
 </html>
+
