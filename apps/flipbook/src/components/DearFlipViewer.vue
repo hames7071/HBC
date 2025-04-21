@@ -16,7 +16,7 @@ let flipbookInstance = null;
 
 onMounted(() => {
   // Set correct asset locations
-  window.dFlipLocation = "/dflip/";
+  window.dFlipLocation = "../apps/flipbook/public/dflip/";
 
   // Initialize the flipbook with the provided options
   window.dflipOptions = props.options;
