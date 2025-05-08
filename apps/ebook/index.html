@@ -5,13 +5,21 @@
   <meta charset="utf-8">
   <title>HEM CHAND | Ebook</title>
   <meta name="viewport" content="width=device-width, user-scalable=auto, minimum-scale=1.0, maximum-scale=1.0">
-  <!-- Flipbook StyleSheet -->
+ <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self';">
+	<!-- Flipbook StyleSheet -->
   <link href="dflip/css/dflip.min.css" rel="stylesheet" type="text/css">
   <!-- Icons Stylesheet -->
   <link href="dflip/css/themify-icons.min.css" rel="stylesheet" type="text/css">
   
   <script src="https://cdn.tailwindcss.com"></script>
-
+<script>
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.onkeydown = function(e) {
+    if (e.key === "F12" || (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C"))) {
+      return false;
+    }
+  };
+</script>
 </head>
   <style>
 
