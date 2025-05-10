@@ -1,64 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Hem Chand Profile Card</title>
-  <meta name="description" content="">
-  <meta name="keywords" content="">
-  <meta name="author" content="">
-	<meta name="google-adsense-account" content="ca-pub-9431783872945724">
-  <!-- Font Awesome if you need it
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
-  -->
-  <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/> 
-  <!--Replace with your tailwind.css once created-->
-
-</head>
-
-	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9431783872945724"
-     crossorigin="anonymous"></script>
-<style>
-	.imghead {
-		with: 100%;
-		height: 155px;
-		 padding: 10px 20px;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hem Chand|Web profile</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      height: 100vh;
       display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .content {
+      flex: 1;
+      padding: 20px;
+      text-align: center;
+      background: #fafafa;
+      margin-bottom: 100px;
+    }
+
+    .dock {
+      position: fixed;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;
+      background: white;
+      padding: 10px 25px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+    }
+
+    .dock img {
+      width: 40px;
+      height: 40px;
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+
+    .dock img:hover {
+      transform: scale(1.5);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #fff;
+      display: flex;
+      justify-content: space-around;
       align-items: center;
-	}
-</style>
+      padding: 12px 0;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    }
+
+    .bottom-nav button {
+      background: none;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      color: #333;
+    }
+
+    .bottom-nav button:focus {
+      color: #007BFF;
+    }
+  </style>
+</head>
 <body>
-	<header>
-	<img src="assets/Screen180120.png" class="imghead">
-</img>
-	</header>
 
-
-  <div class="max-w-4xl flex items-center h-auto lg:h-screen flex-wrap mx-auto my-32 lg:my-0">
-    <!--Main Col-->
-	<div id="profile" class="w-full lg:w-3/5 rounded-lg lg:rounded-l-lg lg:rounded-r-none shadow-2xl bg-white opacity-75 mx-6 lg:mx-0">
-	<div class="p-4 md:p-12 text-center lg:text-left">
-			<!-- Image for mobile view-->
-			
-			<p class="pt-4 text-base font-bold flex items-center justify-center lg:justify-start"><svg class="h-4 fill-current text-green-700 pr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520">
-<rect
-width="520" height="520"
-rx="15%"
-fill="#ffffff"/>
-<clipPath id="a">
-<path d="M375 136a133 133 0 00-79-66 136 136 0 00-40-6 133 133 0 00-103 48 133 133 0 00-31 86c0 38 13 64 13 64 15 32 42 61 61 86a399 399 0 0130 45 222 222 0 0117 42c3 10 6 13 13 13s11-5 13-13a228 228 0 0116-41 472 472 0 0145-63c5-6 32-39 45-64 0 0 15-29 15-68 0-37-15-63-15-63z"/>
-</clipPath>
-<g stroke-width="130" clip-path="url(#a)">
-<path stroke="#fbbc04" d="M104 379l152-181"/>
-<path stroke="#4285f4" d="M256 198L378 53"/>
-<path stroke="#34a853" d="M189 459l243-290"/>
-<path stroke="#1a73e8" d="M255 120l-79-67"/>
-<path stroke="#ea4335" d="M76 232l91-109"/></g>
-<circle cx="256" cy="198" r="51" fill="#ffffff"/>
-</svg>	Kailali, Nepal</p>
-			<p class="pt-8 text-sm">Hello, It's me Hem Chand, and I am passionate about combining agriculture with technology to support 
+  <div class="content" id="main-content">
+    <h1>Welcome</h1>
+<img src="assets/Screen180120.png">
+    <p>Hello, It's me Hem Chand, and I am passionate about combining agriculture with technology to support 
 				rural development and community empowerment. 
 				Being from Nepal, I have a deep connection with agriculture and a strong desire to contribute to its advancement 
 				through innovation. I’m especially interested in digital solutions that improve access to agricultural knowledge 
@@ -66,97 +87,84 @@ fill="#ffffff"/>
 
 Outside of academics, I enjoy some blogging about current affairs, contemporary society, agriculture technology, education, and financial education. 
 				I also have experience in such graphic design, basic website development, and webdesign. I aspire to create meaningful 
-				digital tools that connect knowledge, people, and progress in the agricultural sector.</p>
-
-			<!-- Adunit 1 -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-9431783872945724"
-     data-ad-slot="6360746839"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<div class="font-sans antialiased text-gray-900 leading-normal tracking-wider bg-cover" style="background-image:url('../assets/IMG_20250419_223521.jpg');">
-		
-			<div class="pt-12 pb-8">
-				<a href="apps/ebook/"
-				<button class="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-full">
-				EBOOK LIBRARY
-				</button> </a>
-			</div>
-			
-			<div class="pt-12 pb-8">
-				<a href="game.html"
-				<button class="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-full">
-				Play Game
-				</button> </a>
-			</div>
-			
-
-			<div class="mt-6 pb-16 lg:pb-0 w-4/5 lg:w-full mx-auto flex flex-wrap items-center justify-between">
-				<a class="link" href="https://facebook.com" data-tippy-content="@hem.chand.thakuri.io"><svg class="h-6 fillcurrent text-gray-600 hover:text-green-700" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Facebook</title><path d="M22.676 0H1.324C.593 0 0 .593 0 1.324v21.352C0 23.408.593 24 1.324 24h11.494v-9.294H9.689v-3.621h3.129V8.41c0-3.099 1.894-4.785 4.659-4.785 1.325 0 2.464.097 2.796.141v3.24h-1.921c-1.5 0-1.792.721-1.792 1.771v2.311h3.584l-.465 3.63H16.56V24h6.115c.733 0 1.325-.592 1.325-1.324V1.324C24 .593 23.408 0 22.676 0"/></svg></a>
-				<a class="link" href="https://x.com" data-tippy-content="@hemchand_np"><svg class="h-6 fill-current text-gray-600 hover:text-green-700" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Twitter</title><path d="M23.954 4.569c-.885.389-1.83.654-2.825.775 1.014-.611 1.794-1.574 2.163-2.723-.951.555-2.005.959-3.127 1.184-.896-.959-2.173-1.559-3.591-1.559-2.717 0-4.92 2.203-4.92 4.917 0 .39.045.765.127 1.124C7.691 8.094 4.066 6.13 1.64 3.161c-.427.722-.666 1.561-.666 2.475 0 1.71.87 3.213 2.188 4.096-.807-.026-1.566-.248-2.228-.616v.061c0 2.385 1.693 4.374 3.946 4.827-.413.111-.849.171-1.296.171-.314 0-.615-.03-.916-.086.631 1.953 2.445 3.377 4.604 3.417-1.68 1.319-3.809 2.105-6.102 2.105-.39 0-.779-.023-1.17-.067 2.189 1.394 4.768 2.209 7.557 2.209 9.054 0 13.999-7.496 13.999-13.986 0-.209 0-.42-.015-.63.961-.689 1.8-1.56 2.46-2.548l-.047-.02z"/></svg></a>
-				<a class="link" href="https://github.com/hames7071" data-tippy-content="@hames7071"><svg class="h-6 fill-current text-gray-600 hover:text-green-700" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
-				<a class="link" href="#" data-tippy-content="@unsplash_handle"><svg class="h-6 fill-current text-gray-600 hover:text-green-700" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Unsplash</title><path d="M7.5 6.75V0h9v6.75h-9zm9 3.75H24V24H0V10.5h7.5v6.75h9V10.5z"/></svg></a>
-				<a class="link" href="https://instagram.com" data-tippy-content="@hem.chand.thakuree"><svg class="h-6 fill-current text-gray-600 hover:text-green-700" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Instagram</title><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/></svg></a>
-				<a class="link" href="https://whatsapp.com/channel/0029VaDWizZ2f3ES73xbvB1N" data-tippy-content="@hemchand_np"><svg class="h-6 fill-current text-gray-600 hover:text-green-700" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>WhatsApp</title><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></a>
-				<a class="link" href="#" data-tippy-content="@youtube_handle"><svg class="h-6 fill-current text-gray-600 hover:text-green-700" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>YouTube</title><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg></a>
-			</div>
-			
-			<!-- Use https://simpleicons.org/ to find the svg for your preferred product --> 
-
-		</div>
-
-	</div>
-	
-	<!--Img Col-->
-	<div class="w-full lg:w-2/5">
-		<!-- Big profile image for side bar (desktop) -->
-		<img src="https://source.unsplash.com/MP0IUfwrn0A" class="rounded-none lg:rounded-lg shadow-2xl hidden lg:block">
-		<!-- Image from: http://unsplash.com/photos/MP0IUfwrn0A -->
-		
-	</div>
-	
-	
-	<!-- Pin to top right corner -->
-	  <div class="absolute top-0 right-0 h-12 w-18 p-4">
-		<button class="js-change-theme focus:outline-none">🌙</button>
-	  </div>
-
-</div>
+				digital tools that connect knowledge, people, and progress in the agricultural sector</p>
   </div>
-	
-	<amp-ad width="100vw" height="320"
-     type="adsense"
-     data-ad-client="ca-pub-9431783872945724"
-     data-ad-slot="6360746839"
-     data-auto-format="rspv"
-     data-full-width="">
-  <div overflow=""></div>
-</amp-ad>
 
-<amp-ad
-     layout="fixed"
-     width="360"
-     height="800"
-     type="adsense"
-     data-ad-client="ca-pub-9431783872945724"
-     data-ad-slot="4413240340">
-</amp-ad><script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
-	
+  <div class="dock">
+    <img src="https://img.icons8.com/ios-filled/50/home.png" alt="Home" onclick="changeContent('home')" />
+    <img src="https://img.icons8.com/ios-filled/50/book.png" alt="Books" onclick="changeContent('books')" />
+    <img src="https://img.icons8.com/ios-filled/50/controller.png" alt="Settings" onclick="changeContent('games')" />
+  </div>
 
+  <div class="bottom-nav">
+    <button onclick="changeContent('home')">Home</button>
+    <button onclick="changeContent('social')">Connect with us</button>
+  </div>
 
+  <script>
+    function changeContent(section) {
+      const content = document.getElementById('main-content');
+      if (section === 'home') {
+        content.innerHTML = `<h1>Home</h1><img src="assets/Screen180120.png"><p>
+	Hello, It's me Hem Chand, and I am passionate about combining agriculture with technology to support 
+				rural development and community empowerment. 
+				Being from Nepal, I have a deep connection with agriculture and a strong desire to contribute to its advancement 
+				through innovation. I’m especially interested in digital solutions that improve access to agricultural knowledge 
+				and market opportunities.
 
-<ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
-     data-ad-client="ca-pub-9431783872945724"
-     data-ad-slot="7614118753"></ins>
+Outside of academics, I enjoy some blogging about current affairs, contemporary society, agriculture technology, education, and financial education. 
+				I also have experience in such graphic design, basic website development, and webdesign. I aspire to create meaningful 
+				digital tools that connect knowledge, people, and progress in the agricultural sector</p>`;
+      } else if (section === 'books') {
+        content.innerHTML = `<h1>Books</h1>
+        <p> <style>
+            .subject-list { max-width: 500px; margin: auto; text-size:155px; }
+    .subject-row { display: flex; text-size:155px; align-items: center;justify-content: space-between; margin: 10px 0; padding: 10px; border-bottom: 1px solid #ccc; }
+ </style>
+  <div class="subject-list">
+	  <a href="apps/ebooks">
+  <div class="subject-row">
+      <span>Free Books</span>
+    <a href="apps/ebooks">
+    Open
+</a></div>
+	  
+<a href="apps/ebooks/Agribooks.htm">
+    <div class="subject-row">
+      <span>References material for Agriculture Students</span>
+    <a href="apps/ebooks/Agribooks.htm">
+    Open
+    </a> </div></a></p>`;
+      } else if (section === 'games') {
+        content.innerHTML = `<h1>2D games</h1><p>
+     <style>
+         .subject-list { max-width: 500px; margin: auto; text-size:155px; }
+    .subject-row { display: flex; text-size:155px; align-items: center;justify-content: space-between; margin: 10px 0; padding: 10px; border-bottom: 1px solid #ccc; }
+ </style>
+  <div class="subject-list">
+	  <a href="apps/webgl/plane2d/">
+  <div class="subject-row">
+      <span>1. Aviator 2D</span>
+    <a href="apps/webgl/plane2d/">
+    Open
+</a></div>
+	  
+<a href="apps/polytrack-main/"">
+    <div class="subject-row">
+      <span>2. Polytrack</span>
+    <a href="apps/polytrack-main/">
+    Open
+    </a> </div></a>
+    </p>`;
+      }
+      else if (section === 'social') {
+        content.innerHTML = `<h1>Connect with me</h1><p><a href="https://facebook.com/hem.chand.thakuri.io">Facebook</a></p>`;
+      } 
+       else if (section === 'profile') {
+        content.innerHTML = `<h1>Profile</h1><p>View and edit your profile details.</p>`;
+      }
+    }
+  </script>
+
 </body>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
 </html>
-
