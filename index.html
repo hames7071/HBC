@@ -15,7 +15,9 @@
       flex-direction: column;
       justify-content: flex-end;
     }
-
+      .subject-list { max-width: 500px; margin: auto; text-size:155px; }
+    .subject-row { display: flex; text-size:155px; align-items: center;justify-content: space-between; margin: 10px 0; padding: 10px; border-bottom: 1px solid #ccc; }
+ 
     .content {
       flex: 1;
       padding: 20px;
@@ -150,7 +152,7 @@ I also have experience in such <br> graphic design, basic website development, a
     </p>`;
       }
       else if (section === 'social') {
-        content.innerHTML = `<h1>Connect with me</h1><p><a href="https://facebook.com/hem.chand.thakuri.io">Facebook</a></p>`;
+        content.innerHTML = `<h1>Connect with me</h1><p><a href="https://facebook.com/hem.chand.thakuri.io">Facebook</a> <hr> <a href="https://x.com/hemchand_np"> X.com [Twitter]</p>`;
       } 
        else if (section === 'profile') {
         content.innerHTML = `<h1>Profile</h1><p>View and edit your profile details.</p>`;
