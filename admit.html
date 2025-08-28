@@ -40,81 +40,18 @@
     button:hover {
         background: #003399;
     }
-    .admit-card {
-        width: 800px;
-        margin: 20px auto;
-        border: 2px solid #000;
+    .admit-preview {
+        margin-top: 20px;
         padding: 15px;
         text-align: left;
-        position: relative;
+        border: 1px dashed #666;
+        background: #fafafa;
     }
-    .header {
-        text-align: center;
-        margin-bottom: 10px;
-    }
-    .header img {
-        width: 80px;
-        position: absolute;
-        top: 10px;
-        left: 15px;
-    }
-    .header h2 {
-        margin: 0;
-        font-size: 22px;
-    }
-    .header h3 {
-        margin: 2px 0;
-        font-size: 16px;
-        color: #333;
-    }
-    .reg-no {
-        position: absolute;
-        top: 15px;
-        right: 20px;
-        font-weight: bold;
-    }
-    .student-info {
-        display: flex;
-        border: 1px solid #000;
-        padding: 10px;
-    }
-    .photo {
-        width: 150px;
-        text-align: center;
-        border-right: 1px solid #000;
-        padding-right: 10px;
-    }
-    .photo img {
-        max-width: 120px;
-        height: auto;
-    }
-    .details {
-        flex: 1;
-        padding-left: 15px;
-    }
-    .details p {
-        margin: 4px 0;
-    }
-    table.subjects {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-    }
-    table.subjects th, table.subjects td {
-        border: 1px solid #000;
-        padding: 6px;
-        text-align: left;
-    }
-    .signature {
-        text-align: right;
-        margin-top: 15px;
-        font-style: italic;
-    }
-    .print-btn {
+    .open-print-btn {
         margin-top: 15px;
         background: #28a745;
     }
-    .print-btn:hover {
+    .open-print-btn:hover {
         background: #1e7e34;
     }
 </style>
@@ -127,13 +64,15 @@
     <input type="text" id="regNo" placeholder="Enter Reg. No.">
     <button onclick="searchStudent()">Search</button>
 
-    <div id="admitCard" class="admit-card" style="display:none;"></div>
-    <button id="printBtn" class="print-btn" style="display:none;" onclick="printAdmitCard()">Print Admit Card</button>
+    <div id="preview" class="admit-preview" style="display:none;"></div>
+    <button id="printBtn" class="open-print-btn" style="display:none;" onclick="openPrintPage()">Open & Print</button>
 </div>
 
 <script>
+let generatedHTML = ''; // To store dynamic admit card content
+
 async function loadExcelData() {
-    const response = await fetch('assets/doc75/doc1/stubook.xlsx');
+    const response = await fetch('assets/doc75/book1/stubook.xlsx');
     const arrayBuffer = await response.arrayBuffer();
     const data = new Uint8Array(arrayBuffer);
     const workbook = XLSX.read(data, { type: 'array' });
@@ -171,49 +110,58 @@ async function searchStudent() {
         }
     });
 
-    const admitCardDiv = document.getElementById('admitCard');
-    admitCardDiv.style.display = 'block';
-    document.getElementById('printBtn').style.display = 'inline-block';
-
-    admitCardDiv.innerHTML = `
-        <div class="header">
-            <img src="assets/images/logo.png" alt="Logo">
-            <h2>High School Exam Board</h2>
-            <h3>Heduda, Nepal</h3>
-            <div class="reg-no">Reg. No.: ${student['Reg. No.']}</div>
-            <h3>Exam Admit Card</h3>
-        </div>
-        <div class="student-info">
-            <div class="photo">
-                <img src="assets/images/${student['ID photo']}" alt="Photo">
+    generatedHTML = `
+        <div style="width:800px; margin:auto; border:2px solid #000; padding:15px; font-family:Arial;">
+            <div style="text-align:center; position:relative;">
+                <img src="assets/images/logo.png" alt="Logo" style="width:80px; position:absolute; top:10px; left:15px;">
+                <h2 style="margin:0;">High School Exam Board</h2>
+                <h3 style="margin:2px 0;">Heduda, Nepal</h3>
+                <div style="position:absolute; top:15px; right:20px; font-weight:bold;">Reg. No.: ${student['Reg. No.']}</div>
+                <h3>Exam Admit Card</h3>
             </div>
-            <div class="details">
-                <p><strong>Name:</strong> ${student['Name']}</p>
-                <p><strong>Roll No:</strong> ${student['Roll No']}</p>
-                <p><strong>Class:</strong> ${student['Class']}</p>
-                <p><strong>Year:</strong> ${student['Year']}</p>
-                <p><strong>School:</strong> ${student['School']}</p>
+            <div style="display:flex; border:1px solid #000; padding:10px; margin-top:10px;">
+                <div style="width:150px; text-align:center; border-right:1px solid #000; padding-right:10px;">
+                    <img src="assets/images/${student['ID photo']}" alt="Photo" style="max-width:120px;">
+                </div>
+                <div style="flex:1; padding-left:15px;">
+                    <p><strong>Name:</strong> ${student['Name']}</p>
+                    <p><strong>Roll No:</strong> ${student['Roll No']}</p>
+                    <p><strong>Class:</strong> ${student['Class']}</p>
+                    <p><strong>Year:</strong> ${student['Year']}</p>
+                    <p><strong>School:</strong> ${student['School']}</p>
+                </div>
             </div>
-        </div>
-        <h4>Subject</h4>
-        <table class="subjects">
-            <tr><th>Course Code</th><th>Course</th></tr>
-            ${subjects.map(s => `<tr><td>${s.code}</td><td>${s.course}</td></tr>`).join('')}
-        </table>
-        <div class="signature">
-            <p>__________________________</p>
-            <p>Exam Controller</p>
+            <h4 style="margin-top:10px;">Subject</h4>
+            <table style="width:100%; border-collapse:collapse;">
+                <tr><th style="border:1px solid #000; padding:6px;">Course Code</th><th style="border:1px solid #000; padding:6px;">Course</th></tr>
+                ${subjects.map(s => `<tr><td style="border:1px solid #000; padding:6px;">${s.code}</td><td style="border:1px solid #000; padding:6px;">${s.course}</td></tr>`).join('')}
+            </table>
+            <div style="text-align:right; margin-top:15px;">
+                <p>__________________________</p>
+                <p>Exam Controller</p>
+            </div>
         </div>
     `;
+
+    // Show preview on main page
+    document.getElementById('preview').innerHTML = generatedHTML;
+    document.getElementById('preview').style.display = 'block';
+    document.getElementById('printBtn').style.display = 'inline-block';
 }
 
-function printAdmitCard() {
-    const printContents = document.getElementById('admitCard').innerHTML;
-    const originalContents = document.body.innerHTML;
-    document.body.innerHTML = printContents;
-    window.print();
-    document.body.innerHTML = originalContents;
-    location.reload();
+function openPrintPage() {
+    const newWin = window.open('', '_blank');
+    newWin.document.write(`
+        <html>
+        <head>
+            <title>Admit Card</title>
+        </head>
+        <body onload="window.print(); window.close();">
+            ${generatedHTML}
+        </body>
+        </html>
+    `);
+    newWin.document.close();
 }
 </script>
 
