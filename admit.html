@@ -84,7 +84,7 @@
 
 <script>
 async function loadExcelData() {
-    const response = await fetch('assets/doc75/book1/book.xlsx');
+    const response = await fetch('assets/doc75/book1/stubook.xlsx');
     const arrayBuffer = await response.arrayBuffer();
     const data = new Uint8Array(arrayBuffer);
     const workbook = XLSX.read(data, { type: 'array' });
