@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exam Admit Card</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f8;
+        text-align: center;
+        padding: 20px;
+    }
+    .container {
+        max-width: 800px;
+        margin: auto;
+        background: #fff;
+        border: 2px solid #007BFF;
+        padding: 20px;
+        border-radius: 10px;
+    }
+    h2 {
+        color: #007BFF;
+    }
+    input[type="text"] {
+        padding: 8px;
+        width: 200px;
+        margin-right: 10px;
+    }
+    button {
+        padding: 8px 15px;
+        background: #007BFF;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #0056b3;
+    }
+    .admit-card {
+        margin-top: 20px;
+        text-align: left;
+        border: 2px solid #000;
+        padding: 15px;
+    }
+    .admit-card img {
+        max-width: 150px;
+        height: auto;
+    }
+    .details {
+        margin-left: 20px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    th, td {
+        border: 1px solid #333;
+        padding: 6px;
+        text-align: left;
+    }
+    .print-btn {
+        margin-top: 15px;
+        background: #28a745;
+    }
+    .print-btn:hover {
+        background: #1e7e34;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>High School Exam Board</h2>
+    <p>Enter your Registration Number:</p>
+    <input type="text" id="regNo" placeholder="Enter Reg. No.">
+    <button onclick="searchStudent()">Search</button>
+
+    <div id="admitCard" class="admit-card" style="display:none;"></div>
+    <button id="printBtn" class="print-btn" style="display:none;" onclick="window.print()">Print Admit Card</button>
+</div>
+
+<script>
+async function loadExcelData() {
+    const response = await fetch('assets/doc75/book1/book.xlsx');
+    const arrayBuffer = await response.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+    const workbook = XLSX.read(data, { type: 'array' });
+    const studentSheet = XLSX.utils.sheet_to_json(workbook.Sheets['Students']);
+    const facultySheet = XLSX.utils.sheet_to_json(workbook.Sheets['Faculty']);
+    return { studentSheet, facultySheet };
+}
+
+async function searchStudent() {
+    const regNo = document.getElementById('regNo').value.trim();
+    if (!regNo) {
+        alert('Please enter a Registration Number');
+        return;
+    }
+
+    const { studentSheet, facultySheet } = await loadExcelData();
+    const student = studentSheet.find(s => String(s['Reg. No.']) === regNo);
+
+    if (!student) {
+        alert('No record found!');
+        return;
+    }
+
+    // Find subjects based on Faculty (assuming student has a Faculty column or deducing from subjects)
+    const subjects = [];
+    for (let i = 1; i <= 5; i++) {
+        const code = facultySheet[0][`Subject ${i} Course Code`];
+        const course = facultySheet[0][`Subject ${i} Course`];
+        if (code && course) {
+            subjects.push({ code, course });
+        }
+    }
+
+    const admitCardDiv = document.getElementById('admitCard');
+    admitCardDiv.style.display = 'block';
+    document.getElementById('printBtn').style.display = 'inline-block';
+
+    admitCardDiv.innerHTML = `
+        <h3>Exam Admit Card</h3>
+        <p><strong>Name:</strong> ${student['Name']}</p>
+        <p><strong>Roll No:</strong> ${student['Roll No']}</p>
+        <p><strong>Reg. No.:</strong> ${student['Reg. No.']}</p>
+        <p><strong>Class:</strong> ${student['Class']}</p>
+        <p><strong>Year:</strong> ${student['Year']}</p>
+        <p><strong>School:</strong> ${student['School']}</p>
+        <img src="${student['ID photo']}" alt="Photo" />
+        <h4>Subjects</h4>
+        <table>
+            <tr><th>Course Code</th><th>Course</th></tr>
+            ${subjects.map(s => `<tr><td>${s.code}</td><td>${s.course}</td></tr>`).join('')}
+        </table>
+    `;
+}
+</script>
+
+</body>
+</html>
