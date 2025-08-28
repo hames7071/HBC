@@ -47,9 +47,8 @@
     .admit-card img {
         max-width: 150px;
         height: auto;
-    }
-    .details {
-        margin-left: 20px;
+        float: left;
+        margin-right: 15px;
     }
     table {
         width: 100%;
@@ -78,16 +77,17 @@
     <input type="text" id="regNo" placeholder="Enter Reg. No.">
     <button onclick="searchStudent()">Search</button>
 
-    <div id="admitCard" class="admit-card" style="display:none;"></div>
+    <div id="admitCard" class="admit-card" style="display:none; clear: both;"></div>
     <button id="printBtn" class="print-btn" style="display:none;" onclick="window.print()">Print Admit Card</button>
 </div>
 
 <script>
 async function loadExcelData() {
-    const response = await fetch('assets/doc75/book1/stubook.xlsx');
+    const response = await fetch('assets/document/book.xlsx');
     const arrayBuffer = await response.arrayBuffer();
     const data = new Uint8Array(arrayBuffer);
     const workbook = XLSX.read(data, { type: 'array' });
+
     const studentSheet = XLSX.utils.sheet_to_json(workbook.Sheets['Students']);
     const facultySheet = XLSX.utils.sheet_to_json(workbook.Sheets['Faculty']);
     return { studentSheet, facultySheet };
@@ -108,15 +108,20 @@ async function searchStudent() {
         return;
     }
 
-    // Find subjects based on Faculty (assuming student has a Faculty column or deducing from subjects)
+    // Get subjects for the student
+    const subjectCodes = student['Subjects'].split(',').map(code => code.trim());
     const subjects = [];
-    for (let i = 1; i <= 5; i++) {
-        const code = facultySheet[0][`Subject ${i} Course Code`];
-        const course = facultySheet[0][`Subject ${i} Course`];
-        if (code && course) {
-            subjects.push({ code, course });
+
+    // Loop through Faculty sheet to match subjects
+    facultySheet.forEach(row => {
+        for (let i = 1; i <= 5; i++) {
+            const code = row[`Subject ${i} Course Code`];
+            const course = row[`Subject ${i} Course`];
+            if (subjectCodes.includes(String(code))) {
+                subjects.push({ code, course });
+            }
         }
-    }
+    });
 
     const admitCardDiv = document.getElementById('admitCard');
     admitCardDiv.style.display = 'block';
@@ -124,13 +129,13 @@ async function searchStudent() {
 
     admitCardDiv.innerHTML = `
         <h3>Exam Admit Card</h3>
+        <img src="assets/images/${student['ID photo']}" alt="Photo" />
         <p><strong>Name:</strong> ${student['Name']}</p>
         <p><strong>Roll No:</strong> ${student['Roll No']}</p>
         <p><strong>Reg. No.:</strong> ${student['Reg. No.']}</p>
         <p><strong>Class:</strong> ${student['Class']}</p>
         <p><strong>Year:</strong> ${student['Year']}</p>
         <p><strong>School:</strong> ${student['School']}</p>
-        <img src="${student['ID photo']}" alt="Photo" />
         <h4>Subjects</h4>
         <table>
             <tr><th>Course Code</th><th>Course</th></tr>
