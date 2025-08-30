@@ -127,55 +127,6 @@
     </div>
   </div>
 
-  <script>
-    const frame = document.getElementById("mainFrame");
-    const offlineMsg = document.getElementById("offlineMsg");
-
-    function loadProfile() {
-      const token = localStorage.getItem("token");
-      if(!token){
-        window.location.href = "?page=index";
-        return;
-      }
-      google.script.run.withSuccessHandler(res=>{
-        if(res.ok){
-          document.getElementById("profileName").innerText = res.profile.name;
-          document.getElementById("profileEmail").innerText = res.profile.email;
-        } else {
-          alert(res.message);
-          localStorage.removeItem("token");
-          window.location.href = "?page=index";
-        }
-      }).getProfile({ token: token });
-    }
-
-    function loadPage(url){
-      offlineMsg.style.display = "none";
-      frame.src = url;
-    }
-
-    function showOffline(){
-      offlineMsg.style.display = "flex";
-    }
-
-    function retry(){
-      offlineMsg.style.display = "none";
-      frame.src = frame.src;
-    }
-
-    function logout(){
-      const token = localStorage.getItem("token");
-      google.script.run.withSuccessHandler(res=>{
-        localStorage.removeItem("token");
-        window.location.href = "?page=index";
-      }).logoutUser({ token: token });
-    }
-
-    // Detect offline immediately
-    window.addEventListener("offline", showOffline);
-    window.addEventListener("online", ()=>retry());
-
-    loadProfile();
-  </script>
+ 
 </body>
 </html>
