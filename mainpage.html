@@ -134,7 +134,7 @@
     function loadProfile() {
       const token = localStorage.getItem("token");
       if(!token){
-        window.location.href = "?mainpage=index";
+        window.location.href = "?page=index";
         return;
       }
       google.script.run.withSuccessHandler(res=>{
@@ -144,7 +144,7 @@
         } else {
           alert(res.message);
           localStorage.removeItem("token");
-          window.location.href = "?mainpage=index";
+          window.location.href = "?page=index";
         }
       }).getProfile({ token: token });
     }
@@ -167,7 +167,7 @@
       const token = localStorage.getItem("token");
       google.script.run.withSuccessHandler(res=>{
         localStorage.removeItem("token");
-        window.location.href = "?mainpage=index";
+        window.location.href = "?page=index";
       }).logoutUser({ token: token });
     }
 
