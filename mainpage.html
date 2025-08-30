@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Main Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      background: #f4f6f9;
+    }
+    .sidebar {
+      width: 220px;
+      background: #007bff;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 15px;
+      box-sizing: border-box;
+    }
+    .profile {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .profile h3 {
+      margin: 10px 0 0 0;
+      font-size: 18px;
+    }
+    .nav {
+      flex: 1;
+    }
+    .nav a {
+      display: block;
+      padding: 10px;
+      margin: 6px 0;
+      background: rgba(255,255,255,0.2);
+      border-radius: 6px;
+      text-decoration: none;
+      color: #fff;
+      text-align: center;
+    }
+    .nav a:hover {
+      background: rgba(255,255,255,0.4);
+    }
+    .logout {
+      margin-top: auto;
+    }
+    .logout button {
+      width: 100%;
+      padding: 10px;
+      background: #dc3545;
+      border: none;
+      color: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .logout button:hover {
+      background: #a71d2a;
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .iframe-container {
+      flex: 1;
+      position: relative;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .offline {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #f8d7da;
+      color: #721c24;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 20px;
+    }
+    .offline button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #007bff;
+      border: none;
+      color: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="profile">
+      <div>👤</div>
+      <h3 id="profileName">Loading...</h3>
+      <small id="profileEmail"></small>
+    </div>
+    <div class="nav">
+      <a href="#" onclick="loadPage('https://viodinegov.com.np')">Home</a>
+      <a href="#" onclick="loadPage('https://example.com')">Example</a>
+    </div>
+    <div class="logout">
+      <button onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="iframe-container">
+      <iframe id="mainFrame" src="https://viodinegov.com.np" onerror="showOffline()"></iframe>
+      <div class="offline" id="offlineMsg">
+        <h2>⚠️ No Internet</h2>
+        <p>Unable to reach the page. Please check your connection and try again.</p>
+        <button onclick="retry()">🔄 Retry</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const frame = document.getElementById("mainFrame");
+    const offlineMsg = document.getElementById("offlineMsg");
+
+    function loadProfile() {
+      const token = localStorage.getItem("token");
+      if(!token){
+        window.location.href = "?mainpage=index";
+        return;
+      }
+      google.script.run.withSuccessHandler(res=>{
+        if(res.ok){
+          document.getElementById("profileName").innerText = res.profile.name;
+          document.getElementById("profileEmail").innerText = res.profile.email;
+        } else {
+          alert(res.message);
+          localStorage.removeItem("token");
+          window.location.href = "?mainpage=index";
+        }
+      }).getProfile({ token: token });
+    }
+
+    function loadPage(url){
+      offlineMsg.style.display = "none";
+      frame.src = url;
+    }
+
+    function showOffline(){
+      offlineMsg.style.display = "flex";
+    }
+
+    function retry(){
+      offlineMsg.style.display = "none";
+      frame.src = frame.src;
+    }
+
+    function logout(){
+      const token = localStorage.getItem("token");
+      google.script.run.withSuccessHandler(res=>{
+        localStorage.removeItem("token");
+        window.location.href = "?mainpage=index";
+      }).logoutUser({ token: token });
+    }
+
+    // Detect offline immediately
+    window.addEventListener("offline", showOffline);
+    window.addEventListener("online", ()=>retry());
+
+    loadProfile();
+  </script>
+</body>
+</html>
