@@ -3,54 +3,154 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hem Chand|Web profile</title>
+  <title>Hem Chand | Web Profile</title>
   <style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-    }
-      .subject-list { max-width: 500px; margin: auto; text-size:155px; }
-    .subject-row { display: flex; text-size:155px; align-items: center;justify-content: space-between; margin: 10px 0; padding: 10px; border-bottom: 1px solid #ccc; }
- 
-    .content {
-      flex: 1;
-      padding: 20px;
-      text-align: center;
-      background: #fafafa;
-      margin-bottom: 100px;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
     }
 
-    .dock {
+    /* Dark mode */
+    body.dark {
+      background: #181818;
+      color: #eaeaea;
+    }
+    body.dark .navbar {
+      background: #222;
+      color: white;
+    }
+    body.dark .menu {
+      background: #333;
+      color: #fff;
+    }
+    body.dark .menu a { color: #eee; }
+    body.dark .menu a:hover { background: #444; color: #ffd54f; }
+    body.dark .content {
+      background: #222;
+      color: #eee;
+    }
+    body.dark .bottom-nav {
+      background: #222;
+    }
+    body.dark .bottom-nav button {
+      color: #eee;
+    }
+
+    /* Navbar */
+    .navbar {
       position: fixed;
-      bottom: 60px;
-      left: 50%;
-      transform: translateX(-50%);
+      top: 0; left: 0;
+      width: 100%;
+      background: #673ab7;
+      color: white;
+      padding: 15px 20px;
       display: flex;
-      gap: 20px;
-      background: white;
-      padding: 10px 25px;
-      border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-      z-index: 10;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
     }
-
-    .dock img {
-      width: 40px;
-      height: 40px;
-      transition: transform 0.3s;
+    .navbar h1 {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .nav-actions {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    .menu-btn, .toggle-btn {
+      font-size: 22px;
       cursor: pointer;
+      background: none;
+      border: none;
+      color: white;
     }
 
-    .dock img:hover {
-      transform: scale(1.5);
+    /* Dropdown menu */
+    .menu {
+      display: none;
+      position: absolute;
+      right: 20px;
+      top: 60px;
+      background: white;
+      color: #333;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      animation: fadeIn 0.3s ease;
+    }
+    .menu a {
+      display: block;
+      padding: 12px 20px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    .menu a:hover {
+      background: #f2f2f2;
+      color: #673ab7;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(-10px);}
+      to {opacity: 1; transform: translateY(0);}
     }
 
+    /* Content */
+    .content {
+      max-width: 900px;
+      margin: 100px auto 80px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      transition: background 0.3s, color 0.3s;
+    }
+    .content img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .content h1 {
+      color: #673ab7;
+      margin-bottom: 15px;
+      text-align: center;
+      font-size: 26px;
+    }
+    body.dark .content h1 { color: #ffd54f; }
+
+    .content p { text-align: justify; font-size: 16px; margin-bottom: 10px; }
+
+    /* Profile page styling */
+    .profile-card {
+      text-align: center;
+    }
+    .profile-card img {
+      width: 180px;
+      border-radius: 50%;
+      margin-bottom: 15px;
+      border: 4px solid #673ab7;
+    }
+    body.dark .profile-card img {
+      border-color: #ffd54f;
+    }
+    .profile-card h2 {
+      margin-bottom: 5px;
+      color: #673ab7;
+    }
+    body.dark .profile-card h2 { color: #ffd54f; }
+    .profile-card p {
+      margin: 8px 0;
+    }
+
+    /* Bottom nav */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -61,172 +161,121 @@
       align-items: center;
       padding: 12px 0;
       box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+      transition: background 0.3s;
     }
-
     .bottom-nav button {
       background: none;
       border: none;
-      font-size: 16px;
+      font-size: 15px;
       cursor: pointer;
       color: #333;
+      transition: color 0.2s;
     }
-
-    .bottom-nav button:focus {
-      color: #007BFF;
-    }
+    .bottom-nav button:hover { color: #673ab7; }
+    .bottom-nav button:focus { color: #673ab7; }
   </style>
 </head>
 <body>
 
+  <!-- Navbar -->
+  <div class="navbar">
+    <h1>Hem Chand</h1>
+    <div class="nav-actions">
+      <button class="toggle-btn" onclick="toggleDarkMode()">🌙</button>
+      <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    </div>
+    <div class="menu" id="menu">
+      <a href="#" onclick="changeContent('home')">Home</a>
+      <a href="#" onclick="changeContent('books')">Books</a>
+      <a href="#" onclick="changeContent('games')">Games</a>
+      <a href="#" onclick="changeContent('social')">Support</a>
+      <a href="#" onclick="changeContent('profile')">Profile</a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
   <div class="content" id="main-content">
-    
-<img src="assets/Screen180120.png" width="100%">
- <h1> WELCOME TO MY WEBPAGE</h1>
-<p style="text-align: justify">
-Hello, It's me Hem Chand, from Kailali , Nepal. I am currently pursuing
-a Bachelor's degree in Agriculture at Far Western University, School of Agriculture, Tikapur.
-I have a strong interest in agriculture, information technology, and social studies. I am passionate about
-combining agriculture with technology to support rural development and community empowerment. Being from Nepal,
-I have a deep connection with agriculture and a strong desire to contribute to its advancement through innovation.
-I’m especially interested in digital solutions that improve access to agricultural knowledge and market opportunities.
-Outside of academics, I enjoy some blogging about current affairs, contemporary society, agriculture technology, education,
-and financial education. I also have experience in such graphic design, basic website development, and webdesign.
-I aspire to create meaningful digital tools that connect knowledge, people, and progress in the agricultural sector.
-	  
-	  </p>
+    <img src="assets/Screen180120.png" alt="Banner">
+    <h1>WELCOME TO MY WEBPAGE</h1>
+    <p>Hello, It's me Hem Chand, from Kailali , Nepal. I am currently pursuing a Bachelor's degree in Agriculture at Far Western University, School of Agriculture, Tikapur. I have a strong interest in agriculture, information technology, and social studies.</p>
+    <p>I am passionate about combining agriculture with technology to support rural development and community empowerment. Being from Nepal, I have a deep connection with agriculture and a strong desire to contribute to its advancement through innovation.</p>
+    <p>I’m especially interested in digital solutions that improve access to agricultural knowledge and market opportunities. Outside of academics, I enjoy some blogging about current affairs, contemporary society, agriculture technology, education, and financial education.</p>
+    <p>I also have experience in such graphic design, basic website development, and web design. I aspire to create meaningful digital tools that connect knowledge, people, and progress in the agricultural sector.</p>
   </div>
 
-  <div class="dock">
-    <img src="https://img.icons8.com/ios-filled/50/home.png" alt="Home" onclick="changeContent('home')" />
-    <img src="https://img.icons8.com/ios-filled/50/book.png" alt="Books" onclick="changeContent('books')" />
-    <img src="https://img.icons8.com/ios-filled/50/controller.png" alt="Settings" onclick="changeContent('games')" />
-  </div>
-
+  <!-- Bottom Nav -->
   <div class="bottom-nav">
     <button onclick="changeContent('home')">Home</button>
     <button onclick="changeContent('social')">Help us to buy a coffee</button>
   </div>
 
+  <!-- JS -->
   <script>
+    function toggleMenu() {
+      const menu = document.getElementById('menu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+    }
+
     function changeContent(section) {
       const content = document.getElementById('main-content');
       if (section === 'home') {
-        content.innerHTML = `<img src="assets/Screen180120.png" width="100%"><h1>WELCOME TO MY WEBPAGE</h1>
-	<p style="text-align: justify">
-Hello, It's me Hem Chand, from Kailali , Nepal. I am currently pursuing
-a Bachelor's degree in Agriculture at Far Western University, School of Agriculture, Tikapur.
-I have a strong interest in agriculture, information technology, and social studies. I am passionate about
-combining agriculture with technology to support rural development and community empowerment. Being from Nepal,
-I have a deep connection with agriculture and a strong desire to contribute to its advancement through innovation.
-I’m especially interested in digital solutions that improve access to agricultural knowledge and market opportunities.
-Outside of academics, I enjoy some blogging about current affairs, contemporary society, agriculture technology, education,
-and financial education. I also have experience in such graphic design, basic website development, and webdesign.
-I aspire to create meaningful digital tools that connect knowledge, people, and progress in the agricultural sector.
-	  </p>`;
-      } else if (section === 'books') {
+        content.innerHTML = `<img src="assets/Screen180120.png" alt="Banner">
+        <h1>WELCOME TO MY WEBPAGE</h1>
+        <p>Hello, It's me Hem Chand, from Kailali , Nepal. I am currently pursuing a Bachelor's degree in Agriculture at Far Western University, School of Agriculture, Tikapur. I have a strong interest in agriculture, information technology, and social studies.</p>
+        <p>I am passionate about combining agriculture with technology to support rural development and community empowerment. Being from Nepal, I have a deep connection with agriculture and a strong desire to contribute to its advancement through innovation.</p>
+        <p>I’m especially interested in digital solutions that improve access to agricultural knowledge and market opportunities. Outside of academics, I enjoy some blogging about current affairs, contemporary society, agriculture technology, education, and financial education.</p>
+        <p>I also have experience in such graphic design, basic website development, and web design. I aspire to create meaningful digital tools that connect knowledge, people, and progress in the agricultural sector.</p>`;
+      } 
+      else if (section === 'books') {
         content.innerHTML = `<h1>Books</h1>
-        <p> <style>
-            .subject-list { max-width: 500px; margin: auto; text-size:155px; }
-    .subject-row { display: flex; text-size:155px; align-items: left;justify-content: space-between; margin: 10px 0; padding: 10px; border-bottom: 1px solid #ccc; }
- </style>
-  <div class="subject-list">
-	  <a href="apps/ebook">
-  <div class="subject-row">
-      <span>Free Books</span>
-    <a href="apps/ebook">
-    Open
-</a></div>
-	  
-<a href="apps/ebook/Agribooks.htm">
-    <div class="subject-row">
-      <span>References material for Agriculture Students</span>
-    <a href="apps/ebook/Agribooks.htm">
-    Open
-    </a> </div></a></p>`;
-      } else if (section === 'games') {
-        content.innerHTML = `<h1>2D games</h1><p>
-     <style>
-         .subject-list { max-width: 500px; margin: auto; text-size:155px; }
-    .subject-row { display: flex; text-size:155px; align-items: center;justify-content: space-between; margin: 10px 0; padding: 10px; border-bottom: 1px solid #ccc; }
- </style>
-  <div class="subject-list">
-	  <a href="apps/webgl/plane2d/">
-  <div class="subject-row">
-      <span>1. Aviator 2D</span>
-    <a href="apps/webgl/plane2d/">
-    Open
-</a></div>
-	  
-<a href="apps/polytrack-main/"">
-    <div class="subject-row">
-      <span>2. Polytrack</span>
-    <a href="apps/polytrack-main/">
-    Open
-    </a> </div></a>
-
-
-    </p>`;
+        <div class="subject-list">
+          <div class="subject-row"><span>Free Books</span> <a href="apps/ebook">Open</a></div>
+          <div class="subject-row"><span>References for Agriculture Students</span> <a href="apps/ebook/Agribooks.htm">Open</a></div>
+        </div>`;
+      } 
+      else if (section === 'games') {
+        content.innerHTML = `<h1>2D Games</h1>
+        <div class="subject-list">
+          <div class="subject-row"><span>1. Aviator 2D</span> <a href="apps/webgl/plane2d/">Open</a></div>
+          <div class="subject-row"><span>2. Polytrack</span> <a href="apps/polytrack-main/">Open</a></div>
+        </div>`;
       }
       else if (section === 'social') {
         content.innerHTML = `
-  <div style="max-width: 700px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1);">
-    <h3 style="text-align: center; color: #333;">Help me to buy a coffee</h3>
-	<hr/>
-    <div style="display: flex; flex-direction: column; gap: 15px; align-items: center; margin-bottom: 20px;">
-        <img src="assets/IMG_20250918_210811.jpg" style="width: 60%; height: auto; border-radius: 5px;"/>
-        <img src="assets/IMG_20250918_210305.jpg" style="width: 60%; height: auto; border-radius: 5px;"/>
-    </div>
-</div>
-
-`;
+          <div style="max-width: 700px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1);">
+            <h3 style="text-align: center; color: #333;">Help me to buy a coffee</h3>
+            <hr/>
+            <div style="display: flex; flex-direction: column; gap: 15px; align-items: center; margin-bottom: 20px;">
+                <img src="assets/IMG_20250918_210811.jpg" style="width: 60%; height: auto; border-radius: 5px;"/>
+                <img src="assets/IMG_20250918_210305.jpg" style="width: 60%; height: auto; border-radius: 5px;"/>
+            </div>
+          </div>`;
       } 
-       else if (section === 'profile') {
-        content.innerHTML = `<h1>Profile</h1><p>View and edit your profile details.</p>`;
+      else if (section === 'profile') {
+        content.innerHTML = `
+        <div class="profile-card">
+          <img src="assets/id/img7000.jpg" alt="Hem Chand">
+          <h2>Hem Chand</h2>
+          <p><strong>From:</strong> Kailali, Nepal</p>
+          <hr style="margin:15px 0;">
+          <p><strong>Schooling:</strong> <br/>
+          🏫 KAVN Masuriya<br/>
+          🏫 class 9-10 from Shree Mahadev Secondary School (not complete)
+          </p>
+          <p>🏫I.A. (Sociology): 2017-19 Shree Janapriya Secondary School, Likma</p>
+          <p>🏫TSEE Ag. & IScAg (2019-2023) Shree Pahalmansingh Memorial Technical School</p>
+          <p><strong>Undergraduate</strong> <br/>
+          2024–present, Far Western University, School of Agriculture, Tikapur</p>
+        </div>`;
       }
+      document.getElementById('menu').style.display = 'none'; // close menu
     }
   </script>
-
-
-	<!-- Example of minified JavaScript -->
-<script>
-function greet(n){console.log("Hello,"+n+"!");}greet("User");
-
-// Example of obfuscated JavaScript (very basic)
-var _0xabc1 = function(_0x4ef8d2) {
-    console['log']('Hello,' + _0x4ef8d2 + '!');
-};
-_0xabc1('User');
-</script>
-<script>
-document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-});
-
-document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey && e.shiftKey && e.keyCode == 73) { // Ctrl+Shift+I
-        e.preventDefault();
-    }
-    if (e.keyCode == 123) { // F12
-        e.preventDefault();
-    }
-});
-</script>
-<script>
-class MyElement extends HTMLElement {
-  constructor() {
-    super();
-    const shadow = this.attachShadow({ mode: 'open' });
-    shadow.innerHTML = `
-      <style>
-        p { color: red; }
-      </style>
-      <p>This is inside the shadow DOM.</p>
-    `;
-  }
-}
-customElements.define('my-element', MyElement);
-
-</script>
 
 </body>
 </html>
