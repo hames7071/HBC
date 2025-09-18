@@ -78,7 +78,7 @@ async function loadExcelData() {
     const workbook = XLSX.read(data, { type: 'array' });
 
     const studentSheet = XLSX.utils.sheet_to_json(workbook.Sheets['Students']);
-    const facultySheet = XLSX.utils.sheet_to_json(workbook.Sheets['Faculty']);
+    const facultySheet = XLSX.utils.sheet_to_json(workbook.Sheets['Course']);
     return { studentSheet, facultySheet };
 }
 
