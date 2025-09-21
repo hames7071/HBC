@@ -1,167 +1,214 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <title>HEM CHAND | Ebook</title>
-  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-  <!-- Flipbook StyleSheet -->
-  <link href="dflip/css/dflip.min.css" rel="stylesheet" type="text/css">
-  <!-- Icons Stylesheet -->
-  <link href="dflip/css/themify-icons.min.css" rel="stylesheet" type="text/css">
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="dflip/css/dflip.min.css" rel="stylesheet" type="text/css">
+  <link href="dflip/css/themify-icons.min.css" rel="stylesheet" type="text/css">
 
-</head>
   <style>
-       h2 {
-      text-align: center;
-      text-decoration: underline;
-    }
-    .sector .subject-list {
-      max-width: 500px;
-      margin: auto;
-       text-size:35px;
-    }
-    .subject-row {
-      display: flex;
-      text-size:35px;
-      justify-content: space-between;
-      align-items: center;
-      margin: 10px 0;
-      padding: 10px;
-      border-bottom: 1px solid #ccc;
-    }
- .imghead {
-		with: 100%;
-		height: 155px;
-		 padding: 10px 20px;
-      display: flex;
-      align-items: center;
- }
+    * { margin:0; padding:0; box-sizing: border-box; }
+    body { font-family: "Segoe UI", Arial, sans-serif; background: #f8f9fa; color: #333; transition: background 0.3s, color 0.3s; }
+
+    body.dark { background: #181818; color: #eaeaea; }
+    body.dark .content { background: #222; color: #eee; }
+    body.dark .subject-card { background: #333; color: #fff; }
+    body.dark ._df_button { background: #555; color: #ffd54f; }
+    body.dark ._df_button:hover { background: #666; }
+
+    .navbar { position: fixed; top:0; left:0; width:100%; background:#673ab7; color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center; z-index:1000; box-shadow:0 3px 10px rgba(0,0,0,0.15);}
+    .navbar h1 { font-size: 20px; font-weight:bold; }
+    .nav-actions { display:flex; gap:15px; align-items:center; }
+    .menu-btn, .toggle-btn { font-size:22px; cursor:pointer; background:none; border:none; color:white; }
+    .menu { display:none; position:absolute; right:20px; top:60px; background:white; color:#333; border-radius:10px; overflow:hidden; box-shadow:0 5px 20px rgba(0,0,0,0.2); }
+    .menu a { display:block; padding:12px 20px; text-decoration:none; color:#333; font-weight:500; transition: background 0.2s; }
+    .menu a:hover { background:#f2f2f2; color:#673ab7; }
+
+    .content { max-width:900px; margin:100px auto 80px auto; padding:20px; background:white; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.1); transition:background 0.3s, color 0.3s; }
+    .content h2 { text-align:center; text-decoration:underline; margin-bottom:25px; color:#673ab7; }
+    body.dark .content h2 { color:#ffd54f; }
+
+    .subject-list { display:flex; flex-direction:column; gap:15px; }
+    .subject-card { display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background:#fff; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.05); transition:background 0.3s, color 0.3s; }
+    body.dark .subject-card { background:#333; color:#fff; }
+    ._df_button { cursor:pointer; padding:8px 15px; background:#673ab7; color:white; border-radius:8px; font-weight:500; transition:background 0.3s; }
+    ._df_button:hover { background:#5a2fb5; }
+
+    .thumb-container { display:flex; flex-wrap:wrap; gap:15px; justify-content:center; margin-top:25px; }
+    ._df_thumb { width:200px; cursor:pointer; border-radius:10px; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,0.1); transition:transform 0.2s; }
+    ._df_thumb img { width:100%; display:block; }
+    ._df_thumb:hover { transform:scale(1.05); }
+
+    .bottom-nav { position:fixed; bottom:0; width:100%; background:#fff; display:flex; justify-content:space-around; align-items:center; padding:12px 0; box-shadow:0 -2px 10px rgba(0,0,0,0.1); z-index:1000; }
+    .bottom-nav button { background:none; border:none; font-size:15px; cursor:pointer; color:#333; transition:color 0.2s; }
+    .bottom-nav button:hover { color:#673ab7; }
+
+    /* Modal Flipbook */
+    #flipbook-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:2000; }
+    #flipbook-container { width:90%; height:90%; background:white; border-radius:15px; overflow:hidden; position:relative; }
+    #flipbook-close { position:absolute; top:10px; right:15px; font-size:25px; cursor:pointer; background:none; border:none; z-index:10; color:#673ab7; font-weight:bold; }
+    body.dark #flipbook-close { color:#ffd54f; }
   </style>
+</head>
+
 <body>
-<header>
-	<a href="https://hemchand.com.np"> <img src="https://hemchand.com.np/assets/Screen180120.png" class="imghead">
-</img> </a>
-</header>
-  <div class="sector">
-    <h2>Semester I - Bsc. Ag , FWU</h2>
-  
-  <div class="subject-list">
-    
-    <div class="subject-row">
-      <span>1. Fundamentals of Horticulture (HRT121) </span>
-    <div class="_df_button" source="https://hemchand.com.np/apps/ebook/soa_books/SEM-1/notes 1st sem, 2078-converted (1).pdf">    Open
-</div>
-    </div>
 
-    
-    
-    <div class="subject-row">
-      <span>2. Fundamentals of Animal Science (ASC121) </span>
-      <div class="_df_button" source="https://hemchand.com.np/apps/ebook/soa_books/SEM-1/Fundamentals of Animal Science.pdf">
-   Open
-</div>
-    </div>
-
-    
-    <div class="subject-row">
-      <span>3. Fundamentals of Agronomy (121) </span>
-     <div class="_df_button" source="https://hemchand.com.np/apps/ebook/soa_books/SEM-1/Agronomy B.Sc.Ag. UB.pdf">
-   Open
-</div>
-    </div>
-
-
-<div class="subject-row">
-      <span>4. Fundamentals of Biochemistry (BCH121)</span>
-     <div class="_df_button" source="https://drive.google.com/uc?id=1qdddkmchHFWlRg0-kb9WbeenNQ7XfpaX">
-   Open
-</div>
-</div>
-
-    <div class="subject-row">
-      <span>5. Rural Sociology and Educational Psychology (AEX121) </span>
-     <div class="_df_button" source="https://hemchand.com.np/apps/ebook/soa_books/SEM-1/Rural-Socioogy-Note-AEX-121-1-5.pdf">
-   Open
-</div>
-    </div>
-
-    
-    <div class="subject-row">
-      <span>6. Fundamentals of Agroforestry (AGF111)</span>
-     <div class="_df_button" source="https://hemchand.com.np/apps/ebook/soa_books/SEM-1/">
-   Open
-</div>
-    </div>
-
-<div class="subject-row">
-      <span>7. Fundamentals of Agriculture Economics (SSC121) </span>
-     <div class="_df_button" source="https://drive.google.com/uc?id=1qdddkmchHFWlRg0-kb9WbeenNQ7Xfpa">
-   Open
-</div>
-    </div>
-
-<div class="subject-row">
-      <span>8. Fundamentals of Soil Science </span>
-     <div class="_df_button" source="https://drive.google.com/uc?id=1qdddkmchHFWlRg0-kb9WbeenNQ7XfpaX">
-   Open
-</div>
-    </div>
-    
-    
+    <!-- Navbar -->
+  <div class="navbar">
+    <h1>Hem Chand</h1>
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <div class="menu" id="menu">
+      <a href="#" onclick="changeContent('home')">Home</a>
+      <a href="#" onclick="changeContent('books')">Books</a>
+      <a href="#" onclick="changeContent('games')">Games</a>
+      <a href="#" onclick="changeContent('social')">Support</a>
+      <a href="#" onclick="changeContent('profile')">Profile</a>
     </div>
   </div>
 
+  <div class="content" id="main-content">
+    <h2>Slide Book</h2>
 
-  <!-- jQuery  -->
-  <script src="dflip/js/libs/jquery.min.js" type="text/javascript"></script>
-  <!-- Flipbook main Js file -->
-  <script src="dflip/js/dflip.min.js" type="text/javascript"></script>
-  <!-- Flipbook main Js file -->
+    <div class="subject-list">
+      <div class="subject-card">
+        <span>1. Factor affecting AFS</span>
+        <div class="_df_button" data-pdf="../docxin2.0/Factor affecting AFS-Title Slide 2025 final.pdf">Open</div>
+      </div>
 
-<!-- Example of minified JavaScript -->
-<script>
-function greet(n){console.log("Hello,"+n+"!");}greet("User");
+      <div class="subject-card">
+        <span>2. Role of Mansoon in Nepal</span>
+        <div class="_df_button" data-pdf="../docxin2.0/Role of Mansoon in Nepalese economy.pdf">Open</div>
+      </div>
 
-// Example of obfuscated JavaScript (very basic)
-var _0xabc1 = function(_0x4ef8d2) {
-    console['log']('Hello,' + _0x4ef8d2 + '!');
-};
-_0xabc1('User');
-</script>
-<script>
-document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-});
+      <div class="subject-card">
+        <span>3. Phospholipid and its function in cell membrane</span>
+        <div class="_df_button" data-pdf="../examples/Agronomy_note.pdf">Open</div>
+      </div>
+    </div>
 
-document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey && e.shiftKey && e.keyCode == 73) { // Ctrl+Shift+I
-        e.preventDefault();
+    <div class="thumb-container">
+      <div class="_df_thumb" data-pdf="https://hemchand.com.np/apps/ebook/examples/Agronomy_note.pdf">
+        <img src="http://hemchand.com.np/assets/IMG_20250422_090957.jpg" alt="Agronomy">
+      </div>
+      <div class="_df_thumb" data-pdf="https://hemchand.com.np/apps/ebook/examples/Agronomy_note.pdf">
+        <img src="http://hemchand.com.np/assets/IMG_20250419_223530.jpg" alt="Agronomy">
+      </div>
+    </div>
+  </div>
+
+  <!-- Flipbook Modal -->
+  <div id="flipbook-modal">
+    <div id="flipbook-container">
+      <button id="flipbook-close" onclick="closeFlipbook()">×</button>
+      <div id="flipbook"></div>
+    </div>
+  </div>
+<!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <button onclick="changeContent('home')">Home</button>
+    <button onclick="changeContent('social')">Help us to buy a coffee</button>
+  </div>
+
+  <!-- JS -->
+  <script src="dflip/js/libs/jquery.min.js"></script>
+  <script src="dflip/js/dflip.min.js"></script>
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('menu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
     }
-    if (e.keyCode == 123) { // F12
-        e.preventDefault();
-    }
-});
-</script>
-<script>
-class MyElement extends HTMLElement {
-  constructor() {
-    super();
-    const shadow = this.attachShadow({ mode: 'open' });
-    shadow.innerHTML = `
-      <style>
-        p { color: red; }
-      </style>
-      <p>This is inside the shadow DOM.</p>
-    `;
-  }
-}
-customElements.define('my-element', MyElement);
 
-</script>
+    function changeContent(section) {
+      const content = document.getElementById('main-content');
+      if (section === 'home') {
+        content.innerHTML = `<img src="assets/Screen180120.png" alt="Banner">
+        <h1>WELCOME TO MY WEBPAGE</h1>
+        <p>Hello, It's me Hem Chand, from Kailali , Nepal. I am currently pursuing a Bachelor's degree in Agriculture at Far Western University, School of Agriculture, Tikapur. I have a strong interest in agriculture, information technology, and social studies.</p>
+        <p>I am passionate about combining agriculture with technology to support rural development and community empowerment. Being from Nepal, I have a deep connection with agriculture and a strong desire to contribute to its advancement through innovation.</p>
+        <p>I’m especially interested in digital solutions that improve access to agricultural knowledge and market opportunities. Outside of academics, I enjoy some blogging about current affairs, contemporary society, agriculture technology, education, and financial education.</p>
+        <p>I also have experience in such graphic design, basic website development, and web design. I aspire to create meaningful digital tools that connect knowledge, people, and progress in the agricultural sector.</p>`;
+      } 
+      else if (section === 'books') {
+        content.innerHTML = `<h1>Books</h1>
+        <div class="subject-list">
+          <div class="subject-row">
+            <span>Free Books</span>
+            <a href="apps/ebook">Open</a>
+          </div>
+          <div class="subject-row">
+            <span>References material for Agriculture Students</span>
+            <a href="apps/ebook/Agribooks.htm">Open</a>
+          </div>
+        </div>`;
+      } 
+      else if (section === 'games') {
+        content.innerHTML = `<h1>2D Games</h1>
+        <div class="subject-list">
+          <div class="subject-row">
+            <span>1. Aviator 2D</span>
+            <a href="apps/webgl/plane2d/">Open</a>
+          </div>
+          <div class="subject-row">
+            <span>2. Polytrack</span>
+            <a href="apps/polytrack-main/">Open</a>
+          </div>
+        </div>`;
+      }
+      else if (section === 'social') {
+        content.innerHTML = `
+          <div style="max-width: 700px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1);">
+            <h3 style="text-align: center; color: #333;">Help me to buy a coffee</h3>
+            <hr/>
+            <div style="display: flex; flex-direction: column; gap: 15px; align-items: center; margin-bottom: 20px;">
+                <img src="assets/IMG_20250918_210811.jpg" style="width: 60%; height: auto; border-radius: 5px;"/>
+                <img src="assets/IMG_20250918_210305.jpg" style="width: 60%; height: auto; border-radius: 5px;"/>
+            </div>
+          </div>`;
+      } 
+      else if (section === 'profile') {
+        content.innerHTML = `<h1>Profile</h1><p>View and edit your profile details here.</p>`;
+      }
+
+      // Close menu after click
+      document.getElementById('menu').style.display = 'none';
+    }
+  
+  
+    function toggleMenu() {
+      const menu = document.getElementById('menu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+    function toggleDarkMode() { document.body.classList.toggle('dark'); }
+    function scrollToContent() { document.getElementById('main-content').scrollIntoView({ behavior: 'smooth' }); }
+
+    // Flipbook functionality
+    const flipbookModal = document.getElementById('flipbook-modal');
+    const flipbookDiv = document.getElementById('flipbook');
+
+    function openFlipbook(pdf) {
+      flipbookModal.style.display = 'flex';
+      $(flipbookDiv).dFlip({
+        pdf: pdf,
+        webGL: true,
+        autoLoad: true
+      });
+    }
+
+    function closeFlipbook() {
+      flipbookModal.style.display = 'none';
+      $(flipbookDiv).dFlip('destroy'); // Remove old flipbook instance
+    }
+
+    // Attach open events
+    document.querySelectorAll('._df_button, ._df_thumb').forEach(el => {
+      el.addEventListener('click', () => {
+        const pdf = el.dataset.pdf;
+        openFlipbook(pdf);
+      });
+    });
+  </script>
 
 </body>
 </html>
