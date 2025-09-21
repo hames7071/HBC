@@ -346,8 +346,12 @@ document.addEventListener('keydown', function(e) {
         e.preventDefault();
     }
 });
-</script>
-<script>
+
+function toggleMenu() {
+      const menu = document.getElementById('menu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+	
 class MyElement extends HTMLElement {
   constructor() {
     super();
