@@ -201,11 +201,13 @@
       <a href="#" onclick="changeContent('profile')">Profile</a>
     </div>
 	</div>
+
+<div class="content" id="main-content">
 	
-	<header>
+	<div>
 	<a href="https://hemchand.com.np"> <img src="https://hemchand.com.np/assets/Screen180120.png" class="imghead">
 </img> </a>
-	</header>
+	</div>
     <h1 class="epi">Ebook Library</h1>
   <hr class="thick-border"/>
   <div class="bookimg">
@@ -313,7 +315,12 @@ The Richest man in Babylon
      <div class="_df_thumb" source="https://hemchand.com.np/apps/ebook/sdg_pdf/The_Monk_Who_Sold_His_Ferrari_(_PDFDrive_).pdf" thumb="sdg@img/the monk who sold his ferrari.jpg">
 The Monk who sold his ferrari
   </div>
-    
+  </div>
+
+	<div class="bottom-nav">
+    <button onclick="changeContent('home')">Home</button>
+    <button onclick="changeContent('social')">Help us to buy a coffee</button>
+	</div>
     
   <!-- jQuery  -->
   <script src="dflip/js/libs/jquery.min.js" type="text/javascript"></script>
@@ -422,10 +429,7 @@ class MyElement extends HTMLElement {
 customElements.define('my-element', MyElement);
 
 </script>  
-<div class="bottom-nav">
-    <button onclick="changeContent('home')">Home</button>
-    <button onclick="changeContent('social')">Help us to buy a coffee</button>
-</div>
+
 
 </body>
 </html>
