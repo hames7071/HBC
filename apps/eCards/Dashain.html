@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashain Greetings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<style>
+    body {
+    font-family: 'Mukta', sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.app-container {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 900px;
+    width: 100%;
+}
+
+h1 {
+    color: #d32f2f;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 2em;
+}
+
+.card-container {
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+#greetingCanvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+}
+
+.controls {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #555;
+}
+
+input[type="file"],
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical;
+}
+
+button {
+    background-color: #e53935;
+    color: white;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: flex-start;
+}
+
+button:hover {
+    background-color: #d32f2f;
+}
+
+@media (min-width: 768px) {
+    .controls {
+        flex-direction: row;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .input-group {
+        flex-grow: 1;
+        max-width: calc(50% - 0.75rem);
+    }
+}
+    
+</style>
+<body>
+    <div class="app-container">
+        <h1>Create Your Dashain Greeting Card</h1>
+        <div class="card-container">
+            <canvas id="greetingCanvas"></canvas>
+        </div>
+
+        <div class="controls">
+            <div class="input-group">
+                <label for="photoUpload">Upload your photo:</label>
+                <input type="file" id="photoUpload" accept="image/*">
+            </div>
+            
+            <div class="input-group">
+                <label for="wishesText">Your Wishes:</label>
+                <textarea id="wishesText" rows="4" placeholder="Type your wishes and greetings here..."></textarea>
+            </div>
+            
+            <div class="input-group">
+                <label for="yourName">Your Name:</label>
+                <input type="text" id="yourName" placeholder="Your Name">
+            </div>
+
+            <button id="downloadBtn">Download Card</button>
+        </div>
+    </div>
+    <script>
+        
+        document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('greetingCanvas');
+    const ctx = canvas.getContext('2d');
+    const photoUpload = document.getElementById('photoUpload');
+    const wishesTextarea = document.getElementById('wishesText');
+    const yourNameInput = document.getElementById('yourName');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    // Canvas dimensions based on the template aspect ratio
+    const canvasWidth = 800;
+    const canvasHeight = 533;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+
+    // Load the base template image
+    const templateImage = new Image();
+    templateImage.src = 'assets/image_q11.png'; 
+    let userPhoto = null;
+
+    // --- Variables for Dragging ---
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    // Current position of the user's photo
+    let photoX = 0; 
+    let photoY = 0;
+
+    // Coordinates and dimensions for the text and frame
+    const photoFrame = { x: 35, y: 85, width: 395, height: 395 };
+    const wishesBox = { x: 460, y: 175, maxWidth: 300, lineHeight: 28 };
+    const nameBox = { x: 460, y: 405 };
+
+    // Function to draw everything on the canvas
+    const renderCanvas = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 1. Draw the user's photo as the background
+        if (userPhoto) {
+            // Calculate scale to ensure the image "covers" the frame area
+            const hRatio = photoFrame.width / userPhoto.width;
+            const vRatio = photoFrame.height / userPhoto.height;
+            const ratio = Math.max(hRatio, vRatio);
+            
+            const imgWidth = userPhoto.width * ratio;
+            const imgHeight = userPhoto.height * ratio;
+
+            // Draw the user's photo with its draggable position
+            ctx.drawImage(userPhoto, photoX, photoY, imgWidth, imgHeight);
+        } else {
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // 2. Draw the template image on top of the user's photo
+        ctx.drawImage(templateImage, 0, 0, canvas.width, canvas.height);
+
+        // 3. Draw the wishes text
+        ctx.fillStyle = '#444'; 
+        ctx.font = '24px Mukta, sans-serif'; 
+        const wishes = wishesTextarea.value.trim();
+        const words = wishes.split(' ');
+        let line = '';
+        let y = wishesBox.y;
+        for (let i = 0; i < words.length; i++) {
+            const testLine = line + words[i] + ' ';
+            const testWidth = ctx.measureText(testLine).width;
+            if (testWidth > wishesBox.maxWidth && i > 0) {
+                ctx.fillText(line.trim(), wishesBox.x, y);
+                line = words[i] + ' ';
+                y += wishesBox.lineHeight;
+            } else {
+                line = testLine;
+            }
+        }
+        ctx.fillText(line.trim(), wishesBox.x, y);
+
+        // 4. Draw the user's name
+        ctx.font = '24px Mukta, sans-serif';
+        ctx.fillStyle = '#444';
+        const name = yourNameInput.value.trim();
+        if (name) {
+            ctx.fillText(`- ${name}`, nameBox.x, nameBox.y);
+        }
+    };
+
+    // --- Mouse Event Listeners for Draggable Image ---
+
+    canvas.addEventListener('mousedown', (e) => {
+        // Check if a photo is loaded and if the mouse is inside the canvas
+        if (userPhoto) {
+            isDragging = true;
+            dragStartX = e.offsetX - photoX;
+            dragStartY = e.offsetY - photoY;
+        }
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            photoX = e.offsetX - dragStartX;
+            photoY = e.offsetY - dragStartY;
+            renderCanvas();
+        }
+    });
+
+    canvas.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+
+    canvas.addEventListener('mouseout', () => {
+        isDragging = false;
+    });
+
+    // Event listeners for user input
+    templateImage.onload = renderCanvas;
+    wishesTextarea.addEventListener('input', renderCanvas);
+    yourNameInput.addEventListener('input', renderCanvas);
+
+    photoUpload.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                userPhoto = new Image();
+                userPhoto.onload = () => {
+                    // Reset position when a new image is loaded
+                    photoX = photoFrame.x; 
+                    photoY = photoFrame.y;
+                    renderCanvas();
+                };
+                userPhoto.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            userPhoto = null;
+            renderCanvas();
+        }
+    });
+
+    downloadBtn.addEventListener('click', () => {
+        // To download, we need to create a new canvas and re-render without the draggable effect
+        // or a simpler method is to render to an offscreen canvas.
+        const finalCanvas = document.createElement('canvas');
+        finalCanvas.width = canvasWidth;
+        finalCanvas.height = canvasHeight;
+        const finalCtx = finalCanvas.getContext('2d');
+
+        // Render to the offscreen canvas for download
+        // 1. Draw the photo
+        const hRatio = photoFrame.width / userPhoto.width;
+        const vRatio = photoFrame.height / userPhoto.height;
+        const ratio = Math.max(hRatio, vRatio);
+        const imgWidth = userPhoto.width * ratio;
+        const imgHeight = userPhoto.height * ratio;
+        finalCtx.drawImage(userPhoto, photoX, photoY, imgWidth, imgHeight);
+
+        // 2. Draw the template on top
+        finalCtx.drawImage(templateImage, 0, 0, canvasWidth, canvasHeight);
+
+        // 3. Draw the text
+        finalCtx.fillStyle = '#444';
+        finalCtx.font = '24px Mukta, sans-serif';
+        const wishes = wishesTextarea.value.trim();
+        const words = wishes.split(' ');
+        let line = '';
+        let y = wishesBox.y;
+        for (let i = 0; i < words.length; i++) {
+            const testLine = line + words[i] + ' ';
+            const testWidth = finalCtx.measureText(testLine).width;
+            if (testWidth > wishesBox.maxWidth && i > 0) {
+                finalCtx.fillText(line.trim(), wishesBox.x, y);
+                line = words[i] + ' ';
+                y += wishesBox.lineHeight;
+            } else {
+                line = testLine;
+            }
+        }
+        finalCtx.fillText(line.trim(), wishesBox.x, y);
+
+        finalCtx.font = '24px Mukta, sans-serif';
+        finalCtx.fillStyle = '#444';
+        const name = yourNameInput.value.trim();
+        if (name) {
+            finalCtx.fillText(`- ${name}`, nameBox.x, nameBox.y);
+        }
+        
+        // Trigger the download from the offscreen canvas
+        const dataURL = finalCanvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = dataURL;
+        link.download = 'Dashain_Greeting_Card.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+});
+
+        
+    </script>
+</body>
+</html>
