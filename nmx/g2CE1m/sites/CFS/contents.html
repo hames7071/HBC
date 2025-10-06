@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chand Family Society - Responsive UI</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for the mobile menu transition and the accent line */
+        :root {
+            --primary-dark: #1F2937; /* Dark Grey/Black for Header/Footer */
+            --accent-red: #DC2626; /* Red-600 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #374151; /* Default text color */
+        }
+        .header-line {
+            width: 100px;
+            height: 2px;
+            background-color: #374151;
+            margin: 0 auto;
+            margin-top: 4px;
+        }
+        .icon-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 120px;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        .icon-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+        .footer-link {
+            transition: color 0.2s;
+        }
+        .footer-link:hover {
+            color: #EF4444; /* Tailwind red-500 */
+        }
+     .header {
+    background: #007bff;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+.header p {
+    margin-top: 5px;
+    font-size: 1.1em;
+}
+
+/* Sitemap Container and Layout */
+.sitemap-container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.sitemap-section {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.sitemap-section h2 {
+    color: #007bff;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+    margin-top: 0;
+    font-size: 1.8em;
+}
+
+/* List Styling */
+.page-list {
+    list-style-type: none; /* Remove default bullets */
+    padding: 0;
+}
+
+.page-list li {
+    margin-bottom: 10px;
+    border-bottom: 1px dashed #e0e0e0;
+    padding-bottom: 10px;
+}
+
+.page-list li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.page-list a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    display: block; /* Make the link cover the whole list item */
+    padding: 5px 0;
+    transition: color 0.2s ease-in-out;
+}
+
+.page-list a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+   
+        
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#1F2937',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Header Section -->
+    <header class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+            <!-- Logo/Title -->
+            <h1 class="text-xl sm:text-2xl font-extrabold text-primary-dark tracking-wide">
+                Chand Family Society
+            </h1>
+
+            <!-- Hamburger Menu (Mobile Only) -->
+            <button id="menu-button" class="sm:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+            
+            <!-- Desktop Navigation (Hidden in the design image, but standard practice) -->
+            <nav class="hidden sm:block">
+                <ul class="flex space-x-6 text-sm font-semibold text-gray-600">
+                    <li><a href="#about" class="hover:text-red-600 transition">Home</a></li>
+                    <li><a href="#mission" class="hover:text-red-600 transition">Mission</a></li>
+                    <li><a href="#pillars" class="hover:text-red-600 transition">Services</a></li>
+                    <li><a href="#contact" class="hover:text-red-600 transition">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+        
+        <!-- Mobile Menu Overlay (hidden by default) -->
+        <nav id="mobile-menu" class="hidden sm:hidden bg-white absolute w-full z-10 shadow-lg">
+            <ul class="flex flex-col p-4 space-y-2 text-primary-dark">
+                <li><a href="#about" class="block py-2 px-3 hover:bg-gray-100 rounded-md">Home</a></li>
+                <li><a href="#mission" class="block py-2 px-3 hover:bg-gray-100 rounded-md">Mission</a></li>
+                <li><a href="#pillars" class="block py-2 px-3 hover:bg-gray-100 rounded-md">Services</a></li>
+                <li><a href="#contact" class="block py-2 px-3 hover:bg-gray-100 rounded-md">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <!-- New Release Ticker/Banner -->
+    <section class="bg-red-600 text-white text-xs font-semibold py-1 overflow-hidden whitespace-nowrap">
+        <div class="inline-block animate-marquee">
+            <!-- Marquee effect simulation using inline-block and custom CSS keyframes if needed, but for simplicity, repeating text works well -->
+            <span class="px-4">! Chand Family Society !   NEW RELEASE ! Chand Family Society !   NEW RELEASE ! Chand Family Society !   NEW RELEASE !</span>
+        </div>
+    </section>
+
+    
+
+    <main class="sitemap-container">
+        <section class="sitemap-section">
+            <h2>Blog Pages</h2>
+            <ul class="page-list">
+                <li>
+                    <a href="https://hemchand.com.np/nmx/g2CE1m/sites
+/CFS/index.html">Blog Home</a>
+</li>
+                
+                <li>
+                    <a href="https://hemchand.com.np/nmx/g2CE1m/sites
+/CFS/pages/">Pages Directory Index (Optional)</a>
+</li>
+                
+             <li>
+                    <a href="https://hemchand.com.np/nmx/g2CE1m/sites
+/CFS/pages/apage.html">Page A: The First Post Title</a>
+</li>
+                <li>
+                    <a href="https://hemchand.com.np/nmx/g2CE1m/sites
+/CFS/pages/24OCT6.html">राजसी उपाधिहरूको पदानुक्रम र फरक</a>
+</li>
+                <li><a href="https://hemchand.com.np/nmx/g2CE1m/sites
+/CFS/pages/cpage.html">Page C: The Third Post Title</a></li>
+                
+                </ul>
+        </section>
+    </main>    
+    
+    
+        <!-- Footer Section -->
+    <footer class="bg-primary-dark text-gray-200" id="contact">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                
+                <!-- Column 1: About Us -->
+                <div>
+                    <h4 class="text-white text-lg font-bold mb-4 border-b border-red-600 pb-1">About Us</h4>
+                    <p class="text-xs leading-relaxed">
+                        To bring solidarity amongst the Chand Family Society members residing, it was felt necessary to establish this social organization. To make them strong and socially responsible, we support the community. Join us to make things right. Be a proud Chand Family community member.
+                    </p>
+                </div>
+
+                <!-- Column 2: Committee -->
+                <div>
+                    <h4 class="text-white text-lg font-bold mb-4 border-b border-red-600 pb-1">Committee</h4>
+                    <ul class="space-y-1 text-xs">
+                        <li><a href="#" class="footer-link"> Committee of institutional Management and resources development </a></li>
+                        <li><a href="#" class="footer-link"> Committee of Acts, Policy and internal Affairs </a></li>
+                        <li><a href="#" class="footer-link"> Committee of Socio-cultural, Diplomatic relations and foreign affairs  </a></li>
+                        <li><a href="#" class="footer-link"> Committee of Eco-finance, Auditory and Assets Management </a></li>
+                        <li><a href="#" class="footer-link"> Committee of Information, Prints, Library, and Education </a></li>
+                        <li><a href="#" class="footer-link">Committee of additional services and multifunction strategy</a></li>
+                     
+                    </ul>
+                </div>
+
+                <!-- Column 3: Contact Us -->
+                <div class="md:col-span-1 lg:col-span-1">
+                    <h4 class="text-white text-lg font-bold mb-4 border-b border-red-600 pb-1">Contact Us</h4>
+                    <address class="text-xs space-y-1 not-italic">
+                        <p><strong>Head Office:</strong> Dhangadhi Submetropolitan - 01, Sudurpaschim Pradesh, 10800</p>
+                        <p><strong>Phone:</strong> 986xxxxxxxxxx</p>
+                        <p><strong>Email:</strong> contact.abc@cfs.com.np</p>
+                        <p><strong>Web:</strong> www.chandfamilysociety.com.np</p>
+                    </address>
+                </div>
+
+                <!-- Column 4 (Intentionally left blank/used by the 3rd column in smaller screens) -->
+                <div class="hidden lg:block"></div>
+            </div>
+        </div>
+
+        <!-- Copyright Bar -->
+        <div class="border-t border-gray-700 mt-6 py-3 text-center text-xs text-gray-400 bg-gray-800">
+            Design and Developed by Hem Chand
+        </div>
+    </footer>
+
+    <!-- JavaScript for Mobile Menu Toggling -->
+    <script>
+        document.getElementById('menu-button').addEventListener('click', () => {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+        
+        // Custom CSS for marquee effect (to be added to style tag if required)
+        const styleSheet = document.createElement("style");
+        styleSheet.textContent = `
+            @keyframes marquee {
+                0% { transform: translate3d(0, 0, 0); }
+                100% { transform: translate3d(-50%, 0, 0); }
+            }
+            .animate-marquee {
+                display: flex;
+                white-space: nowrap;
+                animation: marquee 10s linear infinite;
+            }
+            .animate-marquee > span {
+                /* Double the content for smooth loop */
+                content: attr(data-text); 
+                padding-right: 2rem; 
+            }
+            .animate-marquee::after {
+                content: '! NEW RELEASE ! NEW RELEASE ! NEW RELEASE ! NEW RELEASE ! NEW RELEASE ! NEW RELEASE !';
+                padding-left: 2rem;
+            }
+        `;
+        document.head.appendChild(styleSheet);
+    </script>
+</body>
+</html>
+
