@@ -1,0 +1,146 @@
+<!doctype html>
+<html ⚡ lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Discover Kyoto</title>
+  <link rel="canonical" href="https://example.com/stories/kyoto-travel">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <script async custom-element="amp-story" src="https://cdn.ampproject.org/v0/amp-story-1.0.js"></script>
+  <script async custom-element="amp-story-auto-ads" src="https://cdn.ampproject.org/v0/amp-story-auto-ads-0.1.js"></script>
+  <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
+
+  <!-- Google Fonts for better aesthetics -->
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Noto+Serif+JP:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-primary: #8B0000; /* Deep Red/Maroon */
+      --color-secondary: #FFD700; /* Gold */
+      --color-white: #FFFFFF;
+    }
+    amp-story-page {
+      background: linear-gradient(0deg, #FAF0E6, #F08080); /* Muted Red gradient */
+      font-family: 'Noto Serif JP', serif;
+    }
+    h1, h2 {
+      font-family: 'Merriweather', serif;
+      color: var(--color-primary);
+    }
+    .caption-box {
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px;
+      border-left: 5px solid var(--color-primary);
+    }
+    .full-story-ad {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #222;
+    }
+  </style>
+</head>
+<body>
+  <amp-story standalone title="Kyoto Travel Guide" publisher="World Traveler" publisher-logo-src="https://placehold.co/100x100/8B0000/FFFFFF?text=Travel" poster-portrait-src="https://placehold.co/600x900/8B0000/FFFFFF?text=Kyoto+Japan">
+
+    <!-- Automatic Ad Configuration -->
+    <amp-story-auto-ads>
+      <script type="application/json">
+        {
+          "ad-attributes": {
+            "type": "adsense",
+            "data-ad-client": "ca-pub-9431783872945724",
+            "data-ad-slot": "6360746839"
+          }
+        }
+      </script>
+    </amp-story-auto-ads>
+
+    <!-- Page 1: Introduction -->
+    <amp-story-page id="intro-kyoto">
+      <amp-story-grid-layer template="fill">
+        <!-- Placeholder Image: Traditional Japanese street -->
+        <amp-img src="https://placehold.co/720x1280/CD5C5C/FFFFFF?text=Welcome+to+Kyoto"
+          width="720" height="1280" layout="responsive"></amp-img>
+      </amp-story-grid-layer>
+      <amp-story-grid-layer template="vertical">
+        <div class="caption-box" style="align-self: end;">
+          <h1 style="font-size: 2.8em; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">Discover Kyoto</h1>
+          <p>The cultural heart of Japan awaits your arrival.</p>
+        </div>
+      </amp-story-grid-layer>
+    </amp-story-page>
+
+    <!-- Page 2: Fushimi Inari Shrine -->
+    <amp-story-page id="inari-shrine">
+      <amp-story-grid-layer template="fill">
+        <!-- Placeholder Image: Torii gates -->
+        <amp-img src="https://placehold.co/720x1280/D2691E/FFFFFF?text=Torii+Gates"
+          width="720" height="1280" layout="responsive"></amp-img>
+      </amp-story-grid-layer>
+      <amp-story-grid-layer template="thirds">
+        <div grid-area="top-third" class="caption-box">
+          <h2>Fushimi Inari</h2>
+          <p>Walk through thousands of vibrant orange Torii gates. A truly unforgettable experience.</p>
+        </div>
+      </amp-story-grid-layer>
+    </amp-story-page>
+
+    <!-- Page 3: Arashiyama Bamboo Grove -->
+    <amp-story-page id="bamboo-grove">
+      <amp-story-grid-layer template="fill">
+        <!-- Placeholder Image: Bamboo forest -->
+        <amp-img src="https://placehold.co/720x1280/228B22/FFFFFF?text=Bamboo+Forest"
+          width="720" height="1280" layout="responsive"></amp-img>
+      </amp-story-grid-layer>
+      <amp-story-grid-layer template="vertical">
+        <div class="caption-box" style="align-self: start;">
+          <h2>Arashiyama Grove</h2>
+          <p>Find peace among the towering stalks of bamboo. Go early to avoid crowds!</p>
+        </div>
+      </amp-story-grid-layer>
+    </amp-story-page>
+
+    <!-- Page 4: Manual Ad Page (Using amp-ad) - Now configured for Google AdSense -->
+    <amp-story-page id="ad-page" class="full-story-ad">
+      <amp-story-grid-layer template="fill">
+        <div class="full-story-ad">
+          <amp-ad width="300" height="250"
+            type="adsense"
+           data-ad-client="ca-pub-9431783872945724"
+     data-ad-slot="6360746839"
+     data-auto-format="rspv"
+            data-loading-strategy="prefer-viewability-over-rate">
+          </amp-ad>
+        </div>
+      </amp-story-grid-layer>
+      <amp-story-grid-layer template="vertical">
+        <div style="background-color: rgba(0,0,0,0.7); color: white; padding: 10px; border-radius: 5px; align-self: end;">
+            Sponsored Content
+        </div>
+      </amp-story-grid-layer>
+    </amp-story-page>
+
+    <!-- Page 5: Conclusion & CTA -->
+    <amp-story-page id="conclusion">
+      <amp-story-grid-layer template="fill">
+        <!-- Placeholder Image: Final shot of a temple -->
+        <amp-img src="https://placehold.co/720x1280/A9A9A9/FFFFFF?text=Start+Planning"
+          width="720" height="1280" layout="responsive"></amp-img>
+      </amp-story-grid-layer>
+      <amp-story-grid-layer template="vertical">
+        <div class="caption-box" style="align-self: center;">
+          <h2>Ready to Explore?</h2>
+          <p>Kyoto is waiting. Click below to book your trip!</p>
+          <amp-story-page-outlink layout="nodisplay">
+            <a href="https://example.com/book-kyoto" title="Book Your Flight" target="_top">Explore Flights & Hotels</a>
+          </amp-story-page-outlink>
+        </div>
+      </amp-story-grid-layer>
+    </amp-story-page>
+
+  </amp-story>
+</body>
+</html>
