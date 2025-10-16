@@ -1,1 +1,260 @@
-cric
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <title>Create Your Fan Frame</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; text-align: center; }
+    .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    h1 { color: #333; }
+    #verification-section { margin-bottom: 20px; }
+    #frame-editor { display: none; margin-top: 20px; }
+    #canvas-container { position: relative; width: 400px; height: 400px; margin: 20px auto; border: 1px solid #ccc; overflow: hidden; }
+    #user-image { position: absolute; cursor: grab; }
+    #frame-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+    input[type="range"] { width: 100%; margin: 10px 0; }
+    button { background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+    button:hover { background-color: #0056b3; }
+    .controls { display: flex; flex-direction: column; align-items: flex-start; margin: 10px 0; }
+  </style>
+</head>
+<body>
+
+  <iframe id="google-script-bridge" style="display:none;" src="YOUR_APPS_SCRIPT_DEPLOYMENT_URL"></iframe>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
+  <div class="container">
+    <h1 id="page-title">Create Your Fan Frame</h1>
+    
+    <div id="verification-section">
+      <p>Enter your **Submission Code** received via email:</p>
+      <input type="text" id="codeInput" placeholder="Enter Code">
+      <button onclick="verifyCodeFromInput()">Verify Code</button>
+      <p id="verify-status"></p>
+    </div>
+
+    <div id="frame-editor">
+      <h2 id="club-display"></h2>
+      
+      <input type="file" id="imageUploader" accept="image/*" onchange="handleImageUpload(event)">
+      
+      <div id="canvas-container">
+        </div>
+      
+      <div class="controls">
+        <label for="zoomSlider">Zoom/Size:</label>
+        <input type="range" id="zoomSlider" min="100" max="300" value="100" step="1" oninput="adjustImage()">
+      </div>
+      
+      <button onclick="downloadFrame()">Download Profile Picture</button>
+    </div>
+  </div>
+  <script>
+    const codeInput = document.getElementById('codeInput');
+    const verifyStatus = document.getElementById('verify-status');
+    const verificationSection = document.getElementById('verification-section');
+    const frameEditor = document.getElementById('frame-editor');
+    const clubDisplay = document.getElementById('club-display');
+    const canvasContainer = document.getElementById('canvas-container');
+    const zoomSlider = document.getElementById('zoomSlider');
+    let userImage = null;
+    let selectedClub = '';
+
+    // --- INITIALIZATION ---
+    window.onload = function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      if (code) {
+        codeInput.value = code;
+        verifyCodeFromInput();
+      }
+    };
+
+    // --- 1. VERIFICATION LOGIC (USES google.script.run) ---
+    function verifyCodeFromInput() {
+      const code = codeInput.value.trim().toUpperCase();
+      if (!code) {
+        verifyStatus.textContent = 'Please enter a code.';
+        return;
+      }
+      verifyStatus.textContent = 'Verifying...';
+
+      // **This calls the verifyCode function in your Google Apps Script**
+      google.script.run
+        .withSuccessHandler(handleVerificationResult)
+        .withFailureHandler(handleVerificationError)
+        .verifyCode(code);
+    }
+
+    function handleVerificationResult(result) {
+      if (result.verified) {
+        selectedClub = result.club;
+        verifyStatus.style.color = 'green';
+        verifyStatus.textContent = `Code verified! You are a fan of ${selectedClub}. Upload your photo below.`;
+        
+        clubDisplay.textContent = `${selectedClub} Fan Frame Creator`;
+        verificationSection.style.display = 'none';
+        frameEditor.style.display = 'block';
+        
+        loadFrameOverlay(selectedClub);
+
+      } else {
+        verifyStatus.style.color = 'red';
+        verifyStatus.textContent = `Invalid Submission Code: ${result.message}`;
+      }
+    }
+
+    function handleVerificationError(error) {
+      verifyStatus.style.color = 'red';
+      verifyStatus.textContent = 'Error during verification: The connection to the server failed. Check the Apps Script URL in the iFrame.';
+      console.error("Apps Script Error:", error);
+    }
+
+    // --- 2. IMAGE/FRAME LOGIC ---
+    function loadFrameOverlay(club) {
+      // NOTE: Replace these with your actual image URLs
+      const frameMap = {
+          'Nepal 1': 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiM-1IudXgmoPUGTrQuY-7FLor98Yk0kxJME0mE_5OMmXIMbxYbtLc-Euj-jc0bt2cyTpZOm1o2jnB43sbVeMihNUmIgV4jvANLi2oFUoXyolJHB9XCD_8Bc35veUyVlv9TwmPTxZOwIr4gpvY6173cKRvKAr4LNGt_h4GcK22Aj_OExYaSYLf1tnSZYaQ/w640-h640/IMG_20240529_130230~2.png',
+          'Nepal 2': 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgw65wRpQdCFUhyyvA7Zs5C-m4FYoMrm2I4L9y4UB0sDhlfEq6gUq2aMrLYJeUvlhFaNOADSy-1f58SbVrao_j5jQGP3JyJGJhuWRO0FsOTnecX3420ktQtw-ZoGnaD6CDK5FLTyqW0uo9m-Sk6U9GYAZKDTKFaFPMRveS_QHW4HiFkd7a6dSvMi1go8SI/w640-h640/IMG_20240527_232251.png',
+          'City Mavericks': 'https://i.imgur.com/example-mavericks-frame.png',
+          'United Phoenix': 'https://i.imgur.com/example-phoenix-frame.png',
+      };
+      
+      const frameUrl = frameMap[club] || 'URL_TO_DEFAULT_FRAME'; 
+
+      // Remove existing overlay if any
+      const existingOverlay = document.getElementById('frame-overlay');
+      if(existingOverlay) {
+          existingOverlay.remove();
+      }
+
+      const overlay = document.createElement('img');
+      overlay.id = 'frame-overlay';
+      overlay.src = frameUrl;
+      canvasContainer.appendChild(overlay);
+    }
+
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (userImage) {
+          userImage.remove(); // Use remove() instead of parent.removeChild() for simplicity
+        }
+
+        userImage = document.createElement('img');
+        userImage.id = 'user-image';
+        userImage.src = e.target.result;
+        userImage.style.width = '100%'; // Initial size: fit the container
+        userImage.style.height = 'auto'; 
+        userImage.style.top = '0px';
+        userImage.style.left = '0px';
+        
+        const frameOverlay = document.getElementById('frame-overlay');
+        canvasContainer.insertBefore(userImage, frameOverlay);
+
+        zoomSlider.value = 100;
+        
+        initDragAndTouch(); 
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function adjustImage() {
+      if (!userImage) return;
+      
+      const zoomValue = zoomSlider.value;
+      userImage.style.width = zoomValue + '%';
+    }
+    
+    // --- 3. COMBINED DRAG AND TOUCH FUNCTIONALITY ---
+    function initDragAndTouch() {
+      if (!userImage) return;
+
+      let isDragging = false;
+      let startX, startY, startLeft, startTop;
+
+      const getCoords = (e) => {
+        return e.touches ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : { x: e.clientX, y: e.clientY };
+      };
+
+      const startDrag = (e) => {
+        isDragging = true;
+        const coords = getCoords(e);
+        startX = coords.x;
+        startY = coords.y;
+        startLeft = parseInt(userImage.style.left) || 0;
+        startTop = parseInt(userImage.style.top) || 0;
+        userImage.style.cursor = 'grabbing';
+      };
+
+      const moveDrag = (e) => {
+        if (!isDragging) return;
+        if (e.type === 'touchmove') e.preventDefault(); 
+        
+        const coords = getCoords(e);
+        const dx = coords.x - startX;
+        const dy = coords.y - startY;
+        
+        const newLeft = startLeft + dx;
+        const newTop = startTop + dy;
+
+        userImage.style.left = `${newLeft}px`;
+        userImage.style.top = `${newTop}px`;
+      };
+
+      const endDrag = () => {
+        if (isDragging) {
+          isDragging = false;
+          userImage.style.cursor = 'grab';
+        }
+      };
+      
+      userImage.addEventListener('mousedown', startDrag);
+      userImage.addEventListener('touchstart', startDrag, { passive: false });
+      
+      document.addEventListener('mousemove', moveDrag);
+      document.addEventListener('touchmove', moveDrag, { passive: false });
+      
+      document.addEventListener('mouseup', endDrag);
+      document.addEventListener('touchend', endDrag);
+      document.addEventListener('touchcancel', endDrag);
+    }
+
+    // --- 4. DOWNLOAD LOGIC (Uses html2canvas) ---
+    function downloadFrame() {
+      if (!userImage) {
+        alert('Please upload an image first.');
+        return;
+      }
+      
+      if (typeof html2canvas === 'undefined') {
+          alert("Error: html2canvas library is not loaded. Download is not possible.");
+          return;
+      }
+
+      // Convert the canvas container into a single image
+      html2canvas(canvasContainer, {
+          allowTaint: true, // Needed for external images like your frame overlay
+          useCORS: true, // Essential if frame image is on a different domain (like Blogger/Imgur)
+          width: 400,
+          height: 400
+      }).then(canvas => {
+          // Create a download link
+          const link = document.createElement('a');
+          link.download = `${selectedClub}_Fan_Frame.png`;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+          alert("Download Complete!");
+      }).catch(err => {
+          console.error("Download Error:", err);
+          alert("Could not create the final image. Make sure the frame overlay image has CORS headers.");
+      });
+    }
+    
+</script>
+</body>
+</html>
