@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fan Frame Registration</title>
+  <style>
+    /* General Styles */
+    body { 
+      font-family: 'Arial', sans-serif; 
+      background-color: #f0f2f5; 
+      padding: 20px; 
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container { 
+      width: 100%;
+      max-width: 500px; 
+      margin: auto; 
+      background: white; 
+      padding: 30px; 
+      border-radius: 12px; 
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+      border-top: 5px solid #007bff; /* Accent color */
+    }
+    h1 { 
+      color: #1a1a1a; 
+      text-align: center; 
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 25px;
+    }
+    label { 
+      display: block; 
+      margin: 15px 0 5px; 
+      font-weight: 600; 
+      color: #333;
+    }
+    input[type="text"], 
+    input[type="email"] { 
+      width: 100%; 
+      padding: 12px; 
+      border: 1px solid #ddd; 
+      border-radius: 6px; 
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+    input[type="text"]:focus, 
+    input[type="email"]:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+    }
+    
+    /* Club Selection Styles */
+    .club-selection { 
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .club-btn { 
+      padding: 15px 10px; 
+      border: 2px solid #ddd; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      text-align: center; 
+      background-color: #f9f9f9; 
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    .club-btn:hover {
+        background-color: #eee;
+        border-color: #aaa;
+    }
+    .club-btn.selected { 
+      border-color: #28a745; /* Success color for selection */
+      background-color: #e6f9e6;
+      font-weight: bold; 
+      box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+    }
+
+    /* Button Styles */
+    button { 
+      background-color: #007bff; 
+      color: white; 
+      padding: 14px 20px; 
+      border: none; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      width: 100%; 
+      font-size: 18px; 
+      font-weight: bold;
+      margin-top: 30px;
+      transition: background-color 0.3s, transform 0.1s;
+    }
+    button:hover:not(:disabled) { 
+      background-color: #0056b3; 
+      transform: translateY(-1px);
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* Status Message */
+    #status { 
+      margin-top: 20px; 
+      padding: 15px;
+      border-radius: 6px;
+      text-align: center; 
+      font-weight: bold; 
+      display: none;
+    }
+    #status.success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    #status.error {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Show Your Colors!</h1>
+    <p class="subtitle">Register to get your unique code and create your official fan frame.</p>
+    
+    <form id="registrationForm">
+      <label for="name">Full Name *</label>
+      <input type="text" id="name" name="name" required placeholder="Enter your full name">
+
+      <label for="email">Email Address *</label>
+      <input type="email" id="email" name="email" required placeholder="example@email.com">
+
+      <label for="whatsapp">WhatsApp Number</label>
+      <input type="text" id="whatsapp" name="whatsapp" placeholder="e.g., +977 98XXXXXXXX">
+      
+      <label>Choose Your Team *</label>
+      <input type="hidden" id="club" name="club" required>
+      
+      <div class="club-selection">
+        <!-- Add more clubs/teams here. Ensure the data-club attribute matches the text/logo -->
+        <div class="club-btn" data-club="The Knights">The Knights</div>
+        <div class="club-btn" data-club="FC Dragons">FC Dragons</div>
+        <div class="club-btn" data-club="City Mavericks">City Mavericks</div>
+        <div class="club-btn" data-club="United Phoenix">United Phoenix</div>
+      </div>
+
+      <button type="submit" id="submitBtn">Register & Get My Code</button>
+    </form>
+
+    <div id="status"></div>
+  </div>
+
+  <script>
+    const clubButtons = document.querySelectorAll('.club-btn');
+    const clubInput = document.getElementById('club');
+    const form = document.getElementById('registrationForm');
+    const statusDiv = document.getElementById('status');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Helper to display status messages
+    function setStatus(message, type) {
+        statusDiv.style.display = 'block';
+        statusDiv.className = type;
+        statusDiv.textContent = message;
+    }
+
+    // Club Selection Logic
+    clubButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Ensure only one is selected
+        clubButtons.forEach(b => b.classList.remove('selected'));
+        button.classList.add('selected');
+        // Set the value for form submission
+        clubInput.value = button.getAttribute('data-club');
+      });
+    });
+
+    // Form Submission Logic
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      if (!clubInput.value) {
+          setStatus('Please select a team before submitting!', 'error');
+          return;
+      }
+      
+      setStatus('Processing your registration...', 'info');
+      submitBtn.disabled = true;
+
+      // Gather form data
+      const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        whatsapp: document.getElementById('whatsapp').value,
+        club: clubInput.value
+      };
+
+      // Call the Apps Script backend function
+      google.script.run
+        .withSuccessHandler(onSuccess)
+        .withFailureHandler(onError)
+        .processRegistration(formData);
+    });
+
+    function onSuccess(result) {
+      if (result.success) {
+        setStatus('Registration successful! Please check your email for your unique Submission Code to continue.', 'success');
+        
+        // Reset form appearance
+        form.reset();
+        clubButtons.forEach(b => b.classList.remove('selected'));
+        clubInput.value = '';
+
+      } else {
+        onError('An unknown error occurred during registration.');
+      }
+      submitBtn.disabled = false;
+    }
+
+    function onError(error) {
+      // Log error to console for debugging
+      console.error("Apps Script Error:", error);
+      setStatus('Error: Could not complete registration. ' + (error.message || String(error)), 'error');
+      submitBtn.disabled = false;
+    }
+  </script>
+</body>
+</html>
