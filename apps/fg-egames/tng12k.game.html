@@ -2,147 +2,96 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bagh Chal | HEM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bagh Chal - Tiger & Goat</title>
     <style>
         :root {
-            /* Palette inspired by traditional Nepalese craftsmanship */
-            --wood-primary: #5D4037;
-            --wood-light: #8D6E63;
-            --wood-dark: #3E2723;
-            --gold-accent: #FFD54F;
-            --text-light: #FFF8E1;
-            
-            --tiger-color: #D32F2F;
-            --goat-color: #1976D2;
-            
-            --shadow-soft: 0 4px 6px rgba(0,0,0,0.3);
-            --shadow-deep: 0 10px 20px rgba(0,0,0,0.5);
-        }
-
-        * {
-            box-sizing: border-box;
-            user-select: none; /* Prevent text selection during play */
-            -webkit-tap-highlight-color: transparent;
+            --board-bg: #e6c288;
+            --line-color: #5d4037;
+            --tiger-color: #d32f2f;
+            --goat-color: #1976d2;
+            --highlight-color: rgba(255, 235, 59, 0.6);
+            --select-color: rgba(76, 175, 80, 0.7);
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden; /* Full screen app feel */
-            font-family: 'Segoe UI', serif;
-            background: radial-gradient(circle at center, #4E342E 0%, #212121 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #2c2c2c;
+            color: white;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            touch-action: manipulation; /* Improves touch response */
         }
 
-        /* --- HUD (Heads Up Display) --- */
-        #ui-layer {
+        h1 { margin: 0 0 10px 0; font-size: 1.5rem; }
+
+        #status-panel {
+            background: #424242;
+            padding: 15px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        #turn-indicator {
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        /* Board Container */
+        #game-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            background-color: var(--board-bg);
+            border: 5px solid #8d6e63;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        @media (min-width: 500px) {
+            #game-container { width: 450px; height: 450px; }
+        }
+
+        /* The Grid Lines (SVG) */
+        svg {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            pointer-events: none; /* Let clicks pass through to board area if needed */
-            z-index: 10;
-        }
-
-        .hud-panel {
-            background: rgba(62, 39, 35, 0.9);
-            border: 2px solid var(--gold-accent);
-            padding: 10px 15px;
-            border-radius: 12px;
-            pointer-events: auto;
-            backdrop-filter: blur(5px);
-            box-shadow: var(--shadow-soft);
-            min-width: 120px;
-            text-align: center;
-        }
-
-        .hud-title {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.8;
-            margin-bottom: 5px;
-        }
-
-        .hud-value {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: var(--gold-accent);
-        }
-
-        /* --- TURN INDICATOR (Floating) --- */
-        #turn-indicator {
-            position: absolute;
-            bottom: 30px;
-            background: var(--wood-dark);
-            border: 2px solid var(--gold-accent);
-            color: var(--gold-accent);
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            box-shadow: var(--shadow-deep);
-            z-index: 10;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* --- BOARD AREA --- */
-        #board-wrapper {
-            position: relative;
-            /* Responsive Square: Fits width or height, with margin */
-            width: min(90vw, 90vh - 150px); 
-            height: min(90vw, 90vh - 150px);
-            max-width: 500px;
-            max-height: 500px;
-            
-            background-color: var(--wood-light);
-            /* Realistic Wood Grain CSS Pattern */
-            background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 2px, transparent 2px, transparent 10px);
-            
-            border: 12px solid var(--wood-dark);
-            border-radius: 8px;
-            box-shadow: 
-                0 0 0 2px #5D4037, /* Inner bezel */
-                0 20px 50px rgba(0,0,0,0.6); /* Deep shadow lift */
-        }
-
-        /* --- SVG LINES --- */
-        svg {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 1;
+            height: 100%;
+            pointer-events: none; /* Let clicks pass through to dots */
         }
 
         line {
-            stroke: #3E2723;
-            stroke-width: 4;
+            stroke: var(--line-color);
+            stroke-width: 3;
             stroke-linecap: round;
-            /* Engraved look */
-            filter: drop-shadow(1px 1px 0px rgba(255,255,255,0.1)); 
         }
 
-        /* --- GRID --- */
+        /* The Grid Points */
         .grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             grid-template-rows: repeat(5, 1fr);
-            width: 100%; height: 100%;
+            width: 100%;
+            height: 100%;
             position: relative;
             z-index: 2;
         }
@@ -155,72 +104,61 @@
             cursor: pointer;
         }
 
-        /* --- DOTS (Intersections) --- */
-        .cell::before {
-            content: '';
-            position: absolute;
-            width: 12px; height: 12px;
-            background: #3E2723;
-            border-radius: 50%;
-            box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5);
-            z-index: -1;
-        }
-
-        /* --- PIECES --- */
+        /* Pieces */
         .piece {
-            width: 75%; height: 75%;
+            width: 60%;
+            height: 60%;
             border-radius: 50%;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.4);
+            transition: transform 0.2s;
             position: relative;
-            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 
-                0 4px 6px rgba(0,0,0,0.4), /* Drop shadow */
-                inset 0 -4px 4px rgba(0,0,0,0.2), /* Bottom shade */
-                inset 0 4px 8px rgba(255,255,255,0.3); /* Top shine */
-            
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
         }
 
         .tiger {
-            background: radial-gradient(circle at 30% 30%, #FF5252, #B71C1C);
+            background: radial-gradient(circle at 30% 30%, #ff5252, #b71c1c);
             border: 2px solid #fff;
         }
-        .tiger::after { content: '🐯'; font-size: 1.2rem; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); }
-
+        
         .goat {
-            background: radial-gradient(circle at 30% 30%, #448AFF, #1565C0);
+            background: radial-gradient(circle at 30% 30%, #42a5f5, #1565c0);
             border: 2px solid #fff;
         }
-        .goat::after { content: '🐐'; font-size: 1.2rem; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); }
 
-        /* --- INTERACTION STATES --- */
+        /* Selection and Hints */
         .selected .piece {
-            transform: scale(1.2) translateY(-5px);
-            box-shadow: 0 15px 25px rgba(0,0,0,0.4);
-            border-color: var(--gold-accent);
-            z-index: 10;
+            transform: scale(1.2);
+            box-shadow: 0 0 10px yellow;
         }
 
         .valid-move::after {
             content: '';
             position: absolute;
-            width: 40%; height: 40%;
-            background: rgba(76, 175, 80, 0.6);
+            width: 30%;
+            height: 30%;
+            background-color: var(--highlight-color);
             border-radius: 50%;
             animation: pulse 1.5s infinite;
-            backdrop-filter: blur(2px);
-            box-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
         }
 
         @keyframes pulse {
-            0% { transform: scale(0.8); opacity: 0.5; }
-            50% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(0.8); opacity: 0.5; }
+            0% { transform: scale(0.8); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(0.8); opacity: 0.7; }
         }
 
-        /* --- MODAL --- */
+        /* Controls */
+        button {
+            background-color: #ff9800;
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        button:active { transform: translateY(1px); }
+
         .modal {
             display: none;
             position: fixed;
@@ -230,101 +168,59 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            backdrop-filter: blur(8px);
         }
         
-        .modal h2 { 
-            font-size: 3rem; 
-            color: var(--gold-accent);
-            text-shadow: 0 0 20px rgba(255, 213, 79, 0.5);
-            margin-bottom: 30px;
-        }
-
-        button {
-            background: linear-gradient(to bottom, #FFD54F, #FFCA28);
-            border: none;
-            padding: 15px 40px;
-            color: #3E2723;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 213, 79, 0.4);
-            transition: transform 0.1s;
-        }
-        button:active { transform: scale(0.95); }
-
-        /* Menu Button */
-        .menu-btn {
-            position: absolute;
-            top: 15px; right: 15px;
-            background: transparent;
-            color: var(--gold-accent);
-            font-size: 1.5rem;
-            border: none;
-            cursor: pointer;
-            z-index: 20;
-            padding: 5px;
-            box-shadow: none;
-        }
-
+        .modal h2 { font-size: 2rem; color: #ffeb3b; }
     </style>
 </head>
 <body>
 
-    <!-- UI Overlay -->
-    <div id="ui-layer">
-        <div class="hud-panel">
-            <div class="hud-title">Goats Stock</div>
-            <div class="hud-value" id="goats-reserve">20</div>
+    <h1>Bagh Chal</h1>
+    
+    <div id="status-panel">
+        <div class="stats-row">
+            <span>Goats to place: <strong id="goats-reserve">20</strong></span>
+            <span>Goats captured: <strong id="goats-dead">0</strong> / 5</span>
         </div>
-        
-        <div class="hud-panel">
-            <div class="hud-title">Captured</div>
-            <div class="hud-value" style="color: var(--tiger-color);" id="goats-dead">0 / 5</div>
-        </div>
+        <div id="turn-indicator" style="background-color: var(--goat-color);">Goat's Turn</div>
+        <div id="phase-indicator" style="font-size: 0.8rem; margin-top:5px; opacity:0.8;">Phase: Placement</div>
     </div>
 
-    <!-- Main Game Board -->
-    <div id="board-wrapper">
+    <div id="game-container">
         <svg id="board-lines"></svg>
+        
         <div class="grid" id="board-grid"></div>
     </div>
 
-    <!-- Floating Turn Indicator -->
-    <div id="turn-indicator">
-        <span id="turn-icon">🐐</span>
-        <span id="turn-text">GOAT'S TURN</span>
-    </div>
-    <div style="position: absolute; bottom: 10px; font-size: 0.8rem; opacity: 0.6;" id="phase-text">Phase: Placement</div>
+    <button onclick="resetGame()">Reset Game</button>
 
-    <!-- Modals -->
     <div id="winner-modal" class="modal">
         <h2 id="winner-text">Goats Win!</h2>
-        <button onclick="resetGame()">New Game</button>
+        <button onclick="resetGame()">Play Again</button>
     </div>
 
-    <button class="menu-btn" onclick="resetGame()">↻</button>
-
 <script>
-    /** * GAME ENGINE 
+    /** * GAME STATE 
      */
     const TIGER = 'T';
     const GOAT = 'G';
     const EMPTY = null;
 
     let board = []; 
-    let turn = GOAT;
+    let turn = GOAT; // GOAT starts
     let goatsToPlace = 20;
     let goatsCaptured = 0;
-    let selectedCell = null; 
-    let validMoves = []; 
+    let selectedCell = null; // {r, c}
+    let validMoves = []; // Array of {r, c}
     let gameOver = false;
 
+    // The Grid is 5x5
+    // Adjacency logic: All orthogonal, but diagonals only on specific cells (Sum of coords is even)
+    
     function initGame() {
         board = Array(5).fill(null).map(() => Array(5).fill(EMPTY));
         
-        // Tigers in corners
+        // Place Tigers in corners
         board[0][0] = TIGER;
         board[0][4] = TIGER;
         board[4][0] = TIGER;
@@ -338,34 +234,38 @@
         gameOver = false;
 
         document.getElementById('winner-modal').style.display = 'none';
-        
-        // UI Initial State
+        renderBoard();
         updateUI();
         drawLines();
-        renderBoard();
     }
 
-    /** * LOGIC 
+    /** * CORE LOGIC 
      */
+
+    // Check if two cells are connected by a line
     function isConnected(r1, c1, r2, c2) {
         const dr = Math.abs(r1 - r2);
         const dc = Math.abs(c1 - c2);
         
+        // Not adjacent
         if (dr > 1 || dc > 1) return false;
         if (dr === 0 && dc === 0) return false;
 
-        // Orthogonal
+        // Orthogonal (up/down/left/right) always connected
         if (dr + dc === 1) return true;
 
-        // Diagonal (Alquerque rule: even sum of coords)
+        // Diagonal: only valid if (r+c) is even (Alquerque board rule)
         if (dr === 1 && dc === 1) {
             if ((r1 + c1) % 2 === 0) return true;
         }
+
         return false;
     }
 
     function getValidMoves(r, c, pieceType) {
         let moves = [];
+        
+        // Check all 8 directions
         for (let dr = -1; dr <= 1; dr++) {
             for (let dc = -1; dc <= 1; dc++) {
                 if (dr === 0 && dc === 0) continue;
@@ -374,16 +274,22 @@
                 let nc = c + dc;
 
                 if (nr >= 0 && nr < 5 && nc >= 0 && nc < 5) {
-                    // Walk
+                    // 1. Normal Move
                     if (isConnected(r, c, nr, nc) && board[nr][nc] === EMPTY) {
                         moves.push({r: nr, c: nc, type: 'move'});
                     }
-                    // Capture (Tiger only)
+                    
+                    // 2. Tiger Capture Move
                     if (pieceType === TIGER) {
+                        // To capture, we jump over a GOAT
                         if (isConnected(r, c, nr, nc) && board[nr][nc] === GOAT) {
+                            // Look one step further
                             let nnr = nr + dr;
                             let nnc = nc + dc;
+                            
                             if (nnr >= 0 && nnr < 5 && nnc >= 0 && nnc < 5) {
+                                // The jump must be straight (geometry handled by coords)
+                                // The landing spot must be connected to the middle spot (usually implies straight line)
                                 if (isConnected(nr, nc, nnr, nnc) && board[nnr][nnc] === EMPTY) {
                                     moves.push({r: nnr, c: nnc, type: 'capture', midR: nr, midC: nc});
                                 }
@@ -398,27 +304,26 @@
 
     function checkWin() {
         if (goatsCaptured >= 5) {
-            endGame("Tigers Win! 🐯");
+            endGame("Tigers Win!");
             return;
         }
 
-        // Goat Win: Tigers trapped (only check if all goats placed)
-        if (goatsToPlace === 0) {
-            let tigerCanMove = false;
-            for (let r = 0; r < 5; r++) {
-                for (let c = 0; c < 5; c++) {
-                    if (board[r][c] === TIGER) {
-                        if (getValidMoves(r, c, TIGER).length > 0) {
-                            tigerCanMove = true;
-                            break;
-                        }
+        // Check if Tigers are trapped
+        let tigerCanMove = false;
+        for (let r = 0; r < 5; r++) {
+            for (let c = 0; c < 5; c++) {
+                if (board[r][c] === TIGER) {
+                    if (getValidMoves(r, c, TIGER).length > 0) {
+                        tigerCanMove = true;
+                        break;
                     }
                 }
-                if (tigerCanMove) break;
             }
-            if (!tigerCanMove) {
-                endGame("Goats Win! 🐐");
-            }
+            if (tigerCanMove) break;
+        }
+
+        if (!tigerCanMove) {
+            endGame("Goats Win!");
         }
     }
 
@@ -430,48 +335,43 @@
 
     /** * INTERACTION 
      */
+
     function handleCellClick(r, c) {
         if (gameOver) return;
+
         const cellContent = board[r][c];
 
-        // Action Logic
-        if (selectedCell && isMoveValid(r, c)) {
-            executeMove(r, c);
-            return;
-        }
-
-        // Selection Logic
+        // --- GOAT TURN ---
         if (turn === GOAT) {
             if (goatsToPlace > 0) {
+                // Phase 1: Placement
                 if (cellContent === EMPTY) {
-                    // Place Goat
                     board[r][c] = GOAT;
                     goatsToPlace--;
                     endTurn();
                 }
             } else {
-                if (cellContent === GOAT) selectPiece(r, c, GOAT);
-                else if (selectedCell) deselect();
+                // Phase 2: Movement
+                if (cellContent === GOAT) {
+                    selectPiece(r, c, GOAT);
+                } else if (selectedCell && isMoveValid(r, c)) {
+                    executeMove(r, c);
+                }
             }
-        } else { // Tiger Turn
-            if (cellContent === TIGER) selectPiece(r, c, TIGER);
-            else if (selectedCell) deselect();
+        } 
+        // --- TIGER TURN ---
+        else if (turn === TIGER) {
+            if (cellContent === TIGER) {
+                selectPiece(r, c, TIGER);
+            } else if (selectedCell && isMoveValid(r, c)) {
+                executeMove(r, c);
+            }
         }
     }
 
     function selectPiece(r, c, type) {
-        if (selectedCell && selectedCell.r === r && selectedCell.c === c) {
-            deselect();
-            return;
-        }
         selectedCell = {r, c};
         validMoves = getValidMoves(r, c, type);
-        renderBoard();
-    }
-    
-    function deselect() {
-        selectedCell = null;
-        validMoves = [];
         renderBoard();
     }
 
@@ -482,17 +382,18 @@
     function executeMove(r, c) {
         const move = validMoves.find(m => m.r === r && m.c === c);
         
-        // Move
+        // Move piece
         board[r][c] = board[selectedCell.r][selectedCell.c];
         board[selectedCell.r][selectedCell.c] = EMPTY;
 
-        // Capture
+        // Handle Capture
         if (move.type === 'capture') {
             board[move.midR][move.midC] = EMPTY;
             goatsCaptured++;
         }
 
-        deselect();
+        selectedCell = null;
+        validMoves = [];
         checkWin();
         if (!gameOver) endTurn();
     }
@@ -501,33 +402,32 @@
         turn = turn === GOAT ? TIGER : GOAT;
         renderBoard();
         updateUI();
-        checkWin(); // Check if next player is trapped immediately
+        
+        // Optimization: Check for win after turn change (specifically for stalemate checks if needed, 
+        // but simple trapping check is usually done after Goat moves).
+        // For this simple version, we check trapping in checkWin() called by render or move.
+        // Re-checking win condition for trapping (Goats just moved, did they trap Tigers?)
+        if (turn === TIGER) checkWin();
     }
 
-    /** * VISUALS 
+    /** * RENDERING 
      */
+
     function updateUI() {
         document.getElementById('goats-reserve').innerText = goatsToPlace;
-        document.getElementById('goats-dead').innerText = `${goatsCaptured} / 5`;
+        document.getElementById('goats-dead').innerText = goatsCaptured;
         
-        const turnText = document.getElementById('turn-text');
-        const turnIcon = document.getElementById('turn-icon');
-        const indicator = document.getElementById('turn-indicator');
-        const phaseText = document.getElementById('phase-text');
-
+        const ind = document.getElementById('turn-indicator');
         if (turn === TIGER) {
-            turnText.innerText = "TIGER'S TURN";
-            turnIcon.innerText = "🐯";
-            indicator.style.borderColor = "#FF5252";
-            indicator.style.color = "#FF5252";
+            ind.innerText = "Tiger's Turn";
+            ind.style.backgroundColor = 'var(--tiger-color)';
         } else {
-            turnText.innerText = "GOAT'S TURN";
-            turnIcon.innerText = "🐐";
-            indicator.style.borderColor = "#448AFF";
-            indicator.style.color = "#448AFF";
+            ind.innerText = "Goat's Turn";
+            ind.style.backgroundColor = 'var(--goat-color)';
         }
-        
-        phaseText.innerText = goatsToPlace > 0 ? "Phase 1: Placement" : "Phase 2: Movement";
+
+        const phaseText = goatsToPlace > 0 ? "Phase: Placement" : "Phase: Movement";
+        document.getElementById('phase-indicator').innerText = phaseText;
     }
 
     function renderBoard() {
@@ -539,14 +439,17 @@
                 const cell = document.createElement('div');
                 cell.className = 'cell';
                 
+                // Highlight Selection
                 if (selectedCell && selectedCell.r === r && selectedCell.c === c) {
                     cell.classList.add('selected');
                 }
 
+                // Highlight Valid Moves
                 if (validMoves.some(m => m.r === r && m.c === c)) {
                     cell.classList.add('valid-move');
                 }
 
+                // Add Piece
                 if (board[r][c] === TIGER) {
                     const p = document.createElement('div');
                     p.className = 'piece tiger';
@@ -566,18 +469,24 @@
     function drawLines() {
         const svg = document.getElementById('board-lines');
         svg.innerHTML = '';
-        const wrapper = document.getElementById('board-wrapper');
-        const width = wrapper.clientWidth;
+        const width = document.getElementById('game-container').offsetWidth;
         const cellInfo = width / 5;
         const half = cellInfo / 2;
+
         const getCoord = (idx) => (idx * cellInfo) + half;
 
+        // Draw connections based on logic
         for (let r = 0; r < 5; r++) {
             for (let c = 0; c < 5; c++) {
+                // Right
                 if (c < 4) createLine(svg, getCoord(c), getCoord(r), getCoord(c+1), getCoord(r));
+                // Down
                 if (r < 4) createLine(svg, getCoord(c), getCoord(r), getCoord(c), getCoord(r+1));
+                // Diagonals (if even sum)
                 if ((r + c) % 2 === 0) {
+                    // Down-Right
                     if (r < 4 && c < 4) createLine(svg, getCoord(c), getCoord(r), getCoord(c+1), getCoord(r+1));
+                    // Down-Left
                     if (r < 4 && c > 0) createLine(svg, getCoord(c), getCoord(r), getCoord(c-1), getCoord(r+1));
                 }
             }
@@ -597,11 +506,12 @@
         initGame();
     }
 
+    // Handle Window Resize to redraw lines
     window.addEventListener('resize', () => {
         drawLines();
-        renderBoard();
     });
 
+    // Start
     initGame();
 
 </script>
