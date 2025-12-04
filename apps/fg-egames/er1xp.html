@@ -1,1 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Snake Game (Nokia Style)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* BASE COLORS (DARK MODE - DEFAULT) */
+        .nokia-container {
+            /* General Theme Variables */
+            --color-phone-body: #1a1a1a;
+            --color-phone-border: #333;
+            --color-text-primary: #00ff00;
+            --color-text-secondary: #005500;
+            --color-text-contrast: #1a1a1a;
+            --color-body-shadow: rgba(0, 0, 0, 0.7);
 
+            /* Screen Variables */
+            --color-screen-frame: #0d0d0d;
+            --color-screen-glow: rgba(0, 255, 0, 0.5);
+            --color-screen-bg: #0a0a0a;
+            --color-screen-border: #00ff00;
+            --color-status-msg-bg: rgba(0, 255, 0, 0.1);
+            --color-status-msg-hover: rgba(0, 255, 0, 0.2);
+
+            /* Game Element Variables */
+            --color-snake: #00ff00;
+            --color-food: #ff00ff;
+
+            /* Control Variables */
+            --color-control-bg: #444;
+            --color-control-text: #ccc;
+            --color-control-action: #00ff00;
+            --color-control-action-shadow: #009900;
+        }
+
+        /* LIGHT MODE OVERRIDES */
+        .nokia-container.light-mode {
+            /* General Theme Variables */
+            --color-phone-body: #f7f7f7;
+            --color-phone-border: #bbb;
+            --color-text-primary: #004d00;
+            --color-text-secondary: #009900;
+            --color-text-contrast: #ffffff;
+            --color-body-shadow: rgba(0, 0, 0, 0.3);
+            border: 12px solid var(--color-phone-border);
+            box-shadow: 0 10px 40px var(--color-body-shadow), inset 0 0 15px rgba(0, 0, 0, 0.1);
+
+            /* Screen Variables */
+            --color-screen-frame: #e0e0e0;
+            --color-screen-glow: rgba(0, 77, 0, 0.5);
+            --color-screen-bg: #ffffff;
+            --color-screen-border: #004d00;
+            --color-status-msg-bg: rgba(0, 77, 0, 0.1);
+            --color-status-msg-hover: rgba(0, 77, 0, 0.2);
+
+            /* Game Element Variables */
+            --color-snake: #004d00;
+            --color-food: #cc00cc;
+
+            /* Control Variables */
+            --color-control-bg: #ddd;
+            --color-control-text: #333;
+            --color-control-action: #004d00;
+            --color-control-action-shadow: #002500;
+        }
+
+        /* Base Styling */
+        body {
+            background-color: #2c3e50;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        .nokia-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: var(--color-phone-body);
+            border: 12px solid var(--color-phone-border);
+            border-radius: 40px;
+            box-shadow: 0 10px 40px var(--color-body-shadow), inset 0 0 15px rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+
+        /* --- Screen Styling --- */
+        .game-screen-frame {
+            background-color: var(--color-screen-frame);
+            border: 4px solid var(--color-phone-border);
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: inset 0 0 8px var(--color-screen-glow);
+        }
+
+        #game-board {
+            display: grid;
+            aspect-ratio: 1 / 1;
+            width: 100%;
+            background-color: var(--color-screen-bg);
+            border: 2px solid var(--color-screen-border);
+        }
+
+        .grid-cell {
+            background-color: var(--color-screen-bg);
+        }
+
+        .snake {
+            background-color: var(--color-snake);
+            border-radius: 0;
+            box-shadow: inset 0 0 2px var(--color-snake);
+        }
+
+        .food {
+            background-color: var(--color-food);
+            box-shadow: 0 0 5px var(--color-food);
+            border-radius: 50%;
+        }
+
+        /* --- Status and Score Display --- */
+        .status-bar {
+            font-family: 'Press Start 2P', monospace;
+            color: var(--color-text-primary);
+            font-size: 8px;
+            text-align: center;
+            padding: 5px 0;
+            text-shadow: 0 0 5px var(--color-text-secondary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #score-display {
+            font-size: 10px;
+            padding-left: 5px;
+        }
+
+        #status-message {
+            font-size: 10px;
+            margin-top: 10px;
+            cursor: pointer;
+            text-align: center;
+            background: var(--color-status-msg-bg);
+            color: var(--color-text-primary);
+            padding: 10px;
+            border-radius: 5px;
+            transition: all 0.2s;
+        }
+
+        #status-message:hover {
+            background: var(--color-status-msg-hover);
+            text-shadow: 0 0 8px var(--color-text-primary);
+        }
+
+        /* --- Controls D-Pad --- */
+        .controls-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .d-pad {
+            display: grid;
+            grid-template-areas:
+                ". up ."
+                "left center right"
+                ". down .";
+            width: 150px;
+            height: 150px;
+        }
+
+        .d-pad button {
+            background-color: var(--color-control-bg);
+            color: var(--color-control-text);
+            border: none;
+            padding: 0;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.1s, box-shadow 0.1s;
+            border-radius: 5px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .d-pad button:active {
+            background-color: var(--color-control-action);
+            color: var(--color-text-contrast);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8), 0 0 5px var(--color-control-action);
+        }
+
+        .d-pad .up { grid-area: up; border-radius: 10px 10px 0 0; }
+        .d-pad .down { grid-area: down; border-radius: 0 0 10px 10px; }
+        .d-pad .left { grid-area: left; border-radius: 10px 0 0 10px; }
+        .d-pad .right { grid-area: right; border-radius: 0 10px 10px 0; }
+        .d-pad .center { 
+            grid-area: center; 
+            background-color: var(--color-control-action); 
+            color: var(--color-text-contrast); 
+            font-size: 10px; 
+        }
+
+        .d-pad .center:active {
+            background-color: var(--color-control-action-shadow);
+            color: var(--color-text-contrast);
+        }
+
+        /* --- Action Button Area --- */
+        .action-button-area {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        .action-button {
+            padding: 10px 15px;
+            border-radius: 20px;
+            background-color: var(--color-control-action);
+            color: var(--color-text-contrast);
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            border: 2px solid var(--color-control-action-shadow);
+            cursor: pointer;
+            box-shadow: 0 4px 0 var(--color-control-action-shadow);
+            transition: all 0.1s;
+            font-size: 16px;
+        }
+
+        .action-button:active {
+            box-shadow: 0 1px 0 var(--color-control-action-shadow);
+            transform: translateY(3px);
+        }
+
+        #theme-toggle-btn {
+            background-color: var(--color-control-bg);
+            color: var(--color-control-text);
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 10px;
+            border: 1px solid var(--color-phone-border);
+            box-shadow: 0 2px 0 var(--color-phone-border);
+        }
+
+        #theme-toggle-btn:active {
+             box-shadow: 0 1px 0 var(--color-phone-border);
+            transform: translateY(1px);
+        }
+
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .nokia-container {
+                max-width: 95%;
+                padding: 15px;
+                margin: 10px;
+            }
+            .d-pad {
+                width: 120px;
+                height: 120px;
+            }
+            .d-pad button {
+                font-size: 14px;
+            }
+            .action-button {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="nokia-container" id="nokia-container">
+        <!-- Phone Speaker Placeholder -->
+        <div style="height: 10px; background-color: var(--color-phone-border); border-radius: 5px; margin: 0 auto; width: 40%;"></div>
+
+        <!-- Game Screen -->
+        <div class="game-screen-frame">
+            <div class="status-bar">
+                <span id="score-display">SCORE: 00</span>
+                <span>RETRO SNAKE 3310</span>
+                <button id="theme-toggle-btn" onclick="toggleTheme()">☀️/🌙</button>
+            </div>
+            <div id="game-board">
+                <!-- Game cells generated here -->
+            </div>
+            <div id="status-message" onclick="startGame()">PRESS ANY KEY / START BUTTON</div>
+        </div>
+
+        <!-- Controls Area -->
+        <div class="controls-area">
+            <!-- D-Pad for Mobile/Touch -->
+            <div class="d-pad">
+                <button class="up" id="btn-up" onclick="changeDirection(0, -1)">▲</button>
+                <button class="left" id="btn-left" onclick="changeDirection(-1, 0)">◀</button>
+                <button class="center" onclick="startGame()">Start</button>
+                <button class="right" id="btn-right" onclick="changeDirection(1, 0)">►</button>
+                <button class="down" id="btn-down" onclick="changeDirection(0, 1)">▼</button>
+            </div>
+
+            <!-- Start/Restart Button -->
+            <div class="action-button-area">
+                <button class="action-button" onclick="startGame()" id="restart-btn">START / RESTART</button>
+                <span style="color: #666; font-size: 10px; font-weight: bold;">(Use Arrow Keys on PC)</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Set up global constants and state
+        const BOARD_SIZE = 20;
+        const INITIAL_SPEED = 150; // Milliseconds per move
+        const SPEED_DECREMENT = 5; // Speed increase per food eaten
+
+        const nokiaContainer = document.getElementById('nokia-container');
+        const board = document.getElementById('game-board');
+        const scoreDisplay = document.getElementById('score-display');
+        const statusMessage = document.getElementById('status-message');
+
+        let snake;
+        let food;
+        let dx, dy; // Direction vectors (dx: horizontal, dy: vertical)
+        let score;
+        let gameLoopInterval;
+        let currentSpeed;
+        let isGameRunning = false;
+        let isChangingDirection = false; // Flag to prevent 180-degree turns in one tick
+
+        /**
+         * Toggles the light mode class on the container element.
+         */
+        function toggleTheme() {
+            nokiaContainer.classList.toggle('light-mode');
+        }
+
+        /**
+         * Initializes the game state.
+         */
+        function initializeGame() {
+            snake = [{ x: 10, y: 10 }, { x: 9, y: 10 }, { x: 8, y: 10 }]; // Initial snake length 3
+            food = { x: 0, y: 0 };
+            dx = 1; // Start moving right
+            dy = 0;
+            score = 0;
+            currentSpeed = INITIAL_SPEED;
+            isGameRunning = false;
+            isChangingDirection = false;
+            scoreDisplay.textContent = `SCORE: ${score.toString().padStart(2, '0')}`;
+            generateFood();
+            drawBoard();
+        }
+
+        /**
+         * Draws the grid and game elements (snake, food).
+         */
+        function drawBoard() {
+            board.style.gridTemplateColumns = `repeat(${BOARD_SIZE}, 1fr)`;
+            board.innerHTML = '';
+
+            for (let y = 0; y < BOARD_SIZE; y++) {
+                for (let x = 0; x < BOARD_SIZE; x++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'grid-cell';
+                    cell.dataset.x = x;
+                    cell.dataset.y = y;
+
+                    // Draw food
+                    if (x === food.x && y === food.y) {
+                        cell.classList.add('food');
+                    }
+
+                    // Draw snake
+                    const isSnakeSegment = snake.some(segment => segment.x === x && segment.y === y);
+                    if (isSnakeSegment) {
+                        cell.classList.add('snake');
+                    }
+
+                    board.appendChild(cell);
+                }
+            }
+        }
+
+        /**
+         * Generates a new position for the food, ensuring it doesn't overlap with the snake.
+         */
+        function generateFood() {
+            let newFoodPos;
+            do {
+                newFoodPos = {
+                    x: Math.floor(Math.random() * BOARD_SIZE),
+                    y: Math.floor(Math.random() * BOARD_SIZE)
+                };
+            } while (snake.some(segment => segment.x === newFoodPos.x && segment.y === newFoodPos.y));
+            food = newFoodPos;
+        }
+
+        /**
+         * Main game loop responsible for moving the snake and checking collisions.
+         */
+        function moveSnake() {
+            if (!isGameRunning) return;
+
+            const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+
+            // 1. Collision Check (Wall or Self)
+            if (
+                head.x < 0 || head.x >= BOARD_SIZE ||
+                head.y < 0 || head.y >= BOARD_SIZE ||
+                snake.some(segment => segment.x === head.x && segment.y === head.y)
+            ) {
+                gameOver();
+                return;
+            }
+
+            // Add new head
+            snake.unshift(head);
+            isChangingDirection = false; // Reset direction flag for the next tick
+
+            // 2. Food Check
+            if (head.x === food.x && head.y === food.y) {
+                score++;
+                scoreDisplay.textContent = `SCORE: ${score.toString().padStart(2, '0')}`;
+                generateFood();
+                // Increase speed (make the interval shorter)
+                currentSpeed = Math.max(30, INITIAL_SPEED - (score * SPEED_DECREMENT));
+                clearInterval(gameLoopInterval);
+                gameLoopInterval = setInterval(moveSnake, currentSpeed);
+            } else {
+                // Remove tail if no food was eaten
+                snake.pop();
+            }
+
+            // 3. Redraw
+            drawBoard();
+        }
+
+        /**
+         * Handles keyboard and button inputs to change the snake's direction.
+         * @param {number} newDx - The new horizontal direction (-1, 0, or 1).
+         * @param {number} newDy - The new vertical direction (-1, 0, or 1).
+         */
+        function changeDirection(newDx, newDy) {
+            if (!isGameRunning) return; // Ignore direction change if game hasn't started
+            if (isChangingDirection) return; // Ignore multiple direction changes in one tick
+
+            // Prevent 180-degree turn (e.g., trying to move left when moving right)
+            if (dx === -newDx && dy === -newDy) {
+                return;
+            }
+
+            dx = newDx;
+            dy = newDy;
+            isChangingDirection = true; // Set flag
+        }
+
+        /**
+         * Starts or restarts the game.
+         */
+        function startGame() {
+            if (isGameRunning) {
+                // If running, treat it as a restart signal (optional, but good UX)
+                clearInterval(gameLoopInterval);
+            }
+
+            initializeGame();
+            isGameRunning = true;
+            statusMessage.style.display = 'none';
+
+            // Start the game loop with the calculated speed
+            gameLoopInterval = setInterval(moveSnake, currentSpeed);
+        }
+
+        /**
+         * Ends the game and displays the final score.
+         */
+        function gameOver() {
+            isGameRunning = false;
+            clearInterval(gameLoopInterval);
+
+            // Update UI for game over
+            statusMessage.textContent = `GAME OVER! Final Score: ${score}. Click to RESTART.`;
+            statusMessage.style.display = 'block';
+            
+            // Use the CSS variable for the status message background
+            statusMessage.style.backgroundColor = 'rgba(255, 0, 0, 0.2)'; 
+
+            // Reset the message background after a short delay
+            setTimeout(() => {
+                // Use the theme-dependent variable for the background color after game over flash
+                statusMessage.style.backgroundColor = getComputedStyle(nokiaContainer).getPropertyValue('--color-status-msg-bg');
+            }, 500);
+        }
+
+        /**
+         * Event listener for keyboard controls.
+         */
+        document.addEventListener('keydown', (e) => {
+            if (!isGameRunning && e.key !== ' ' && e.key.substring(0, 5) !== 'Arrow' && !['w', 'a', 's', 'd'].includes(e.key.toLowerCase())) {
+                // Ignore keys other than start/direction keys if game isn't running
+                return;
+            }
+
+            switch (e.key) {
+                case 'ArrowUp':
+                case 'w':
+                case 'W':
+                    e.preventDefault();
+                    changeDirection(0, -1);
+                    break;
+                case 'ArrowDown':
+                case 's':
+                case 'S':
+                    e.preventDefault();
+                    changeDirection(0, 1);
+                    break;
+                case 'ArrowLeft':
+                case 'a':
+                case 'A':
+                    e.preventDefault();
+                    changeDirection(-1, 0);
+                    break;
+                case 'ArrowRight':
+                case 'd':
+                case 'D':
+                    e.preventDefault();
+                    changeDirection(1, 0);
+                    break;
+                case ' ': // Spacebar to start/restart
+                    e.preventDefault();
+                    startGame();
+                    break;
+            }
+        });
+
+        // Initialize the game when the window loads
+        window.onload = initializeGame;
+
+    </script>
+</body>
+</html>
