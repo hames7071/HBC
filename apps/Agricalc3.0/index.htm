@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HortiCalc Pro | Universal Agri-Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Courier+Prime&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #f8fafc; }
+        .card { background: white; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid #e2e8f0; }
+        .input-group:focus-within label { color: #059669; }
+        
+        /* Receipt Styling */
+        .receipt-font { font-family: 'Courier Prime', monospace; }
+
+        /* Print Logic */
+        @media print {
+            body { background-color: white; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            main { padding: 0 !important; margin: 0 !important; max-width: 100% !important; }
+            .print-area { 
+                width: 100%; 
+                max-width: 450px; 
+                margin: 0 auto; 
+                border: 1px solid #000;
+                padding: 20px;
+            }
+        }
+        .print-only { display: none; }
+    </style>
+</head>
+<body class="text-slate-900">
+
+    <!-- Header -->
+    <header class="bg-emerald-800 text-white p-6 no-print">
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-white p-2 rounded-lg text-emerald-800">
+                    <i class="ph ph-leaf text-3xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold">AGRICalc Pro</h1>
+                    <p class="text-emerald-200 text-sm">Universal Agri-Input Planner</p>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="window.print()" class="bg-emerald-700 hover:bg-emerald-600 px-6 py-2 rounded-full text-sm font-bold flex items-center gap-2 transition border border-emerald-500 shadow-lg">
+                    <i class="ph ph-printer"></i> Print Slip
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto p-4 md:p-8 space-y-8">
+        
+        <!-- UI: Field Configuration -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 no-print">
+            <div class="lg:col-span-2 card p-6">
+                <h2 class="text-lg font-semibold mb-4 flex items-center gap-2 text-emerald-800">
+                    <i class="ph ph-selection-all"></i> Crop & Area Settings
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div class="input-group">
+                            <label class="block text-sm font-medium text-slate-600 mb-1">Select Crop</label>
+                            <select id="cropSelect" class="w-full p-3 rounded-lg border border-slate-200 bg-slate-50 outline-none" onchange="updateCropProfile()">
+                                <optgroup label="Cereals">
+                                    <option value="rice">Rice (Paddy)</option>
+                                    <option value="wheat">Wheat</option>
+                                    <option value="maize">Maize</option>
+                                    <option value="millet">Millet</option>
+                                </optgroup>
+                                <optgroup label="Spices">
+                                    <option value="coriander">Coriander</option>
+                                    <option value="fennel">Fennel</option>
+                                    <option value="dill">Dill</option>
+                                    <option value="cumin">Cumin</option>
+                                    <option value="ginger">Ginger</option>
+                                    <option value="turmeric">Turmeric</option>
+                                </optgroup>
+                                <optgroup label="Vegetables">
+                                    <option value="onion">Onion</option>
+                                    <option value="garlic">Garlic</option>
+                                    <option value="potato">Potato</option>
+                                    <option value="cauliflower">Cauliflower</option>
+                                    <option value="cabbage">Cabbage</option>
+                                    <option value="tomato">Tomato</option>
+                                    <option value="cucumber">Cucumber</option>
+                                    <option value="bitter_gourd">Bitter Gourd</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label class="block text-sm font-medium text-slate-600 mb-1">Land Area Size</label>
+                            <div class="flex">
+                                <input type="number" id="areaInput" value="1" class="w-full p-3 rounded-l-lg border border-slate-200 outline-none">
+                                <select id="areaUnit" class="p-3 bg-slate-100 border border-l-0 border-slate-200 rounded-r-lg text-sm">
+                                    <option value="ha">Hectare</option>
+                                    <option value="acre">Acre</option>
+                                    <option value="sqm">m²</option>
+                                    <option value="sqft">ft²</option>
+                                    <option value="bigha">Bigha</option>
+                                    <option value="kattha">Kattha</option>
+                                    <option value="dhur">Dhur</option>
+                                    <option value="ropani">Ropani</option>
+                                    <option value="aana">Aana</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button onclick="calculateAll()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition shadow-md">
+                            <i class="ph ph-calculator"></i> Calculate Results
+                        </button>
+                    </div>
+                    <div class="bg-emerald-50 rounded-xl p-4 flex flex-col justify-center border border-emerald-100 space-y-2">
+                        <div>
+                            <span class="text-xs font-bold text-emerald-800 uppercase">Converted Area</span>
+                            <div class="text-2xl font-black text-emerald-600"><span id="activeAreaDisplay">1.00</span> <span class="text-sm">Ha</span></div>
+                        </div>
+                        <div class="text-[10px] text-emerald-700 border-t border-emerald-200 pt-2" id="areaBreakdown">
+                            <!-- Nepali conversion details -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard -->
+            <div class="card p-6 bg-slate-900 text-white flex flex-col justify-between">
+                <div class="space-y-6">
+                    <div>
+                        <p class="text-slate-400 text-xs uppercase font-bold tracking-widest">Adjusted Seed Required</p>
+                        <p class="text-4xl font-bold" id="statSeed">---</p>
+                        <p class="text-[10px] text-slate-500 mt-1" id="seedAdjustmentNote"></p>
+                    </div>
+                    <div>
+                        <p class="text-slate-400 text-xs uppercase font-bold tracking-widest">Fertilizer (Total)</p>
+                        <p class="text-4xl font-bold" id="statFert">---</p>
+                    </div>
+                </div>
+                <div class="text-[10px] text-slate-500 italic mt-4">
+                    Click "Calculate" to apply quality factors.
+                </div>
+            </div>
+        </section>
+
+        <!-- Configuration Inputs -->
+        <section class="no-print card p-6">
+             <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <i class="ph ph-gear"></i> Seed Quality & Field Parameters
+             </h3>
+             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="md:col-span-2 grid grid-cols-2 gap-4 bg-amber-50 p-4 rounded-xl border border-amber-100">
+                    <div>
+                        <label class="text-xs text-amber-800 uppercase font-bold flex items-center gap-1">
+                            <i class="ph ph-seal-check"></i> Germination %
+                        </label>
+                        <input type="number" id="germination" value="95" class="w-full p-2 border border-amber-200 rounded mt-1 bg-white" min="1" max="100">
+                    </div>
+                    <div>
+                        <label class="text-xs text-amber-800 uppercase font-bold flex items-center gap-1">
+                            <i class="ph ph-sparkle"></i> Purity %
+                        </label>
+                        <input type="number" id="purity" value="98" class="w-full p-2 border border-amber-200 rounded mt-1 bg-white" min="1" max="100">
+                    </div>
+                    <p class="col-span-2 text-[10px] text-amber-700 italic">Adjusting these values will increase seed rate if quality is below 100%.</p>
+                </div>
+
+                <div>
+                    <label class="text-xs text-slate-500 uppercase font-bold">Seed Rate (kg/ha)</label>
+                    <input type="number" id="seedRate" class="w-full p-2 border rounded mt-1">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-500 uppercase font-bold">FYM (Tons/ha)</label>
+                    <input type="number" id="fymRate" class="w-full p-2 border rounded mt-1">
+                </div>
+                
+                <div class="md:col-span-4 grid grid-cols-1 md:grid-cols-4 gap-6 border-t pt-4">
+                    <div>
+                        <label class="text-xs text-slate-500 uppercase font-bold">Spacing (Row x Plant cm)</label>
+                        <div class="flex gap-1">
+                            <input type="number" id="rowS" class="w-1/2 p-2 border rounded mt-1" placeholder="Row">
+                            <input type="number" id="plantS" class="w-1/2 p-2 border rounded mt-1" placeholder="Plant">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs text-blue-600 font-bold">N Target (kg/ha)</label>
+                        <input type="number" id="reqN" class="w-full p-2 border rounded mt-1">
+                    </div>
+                    <div>
+                        <label class="text-xs text-emerald-600 font-bold">P Target (kg/ha)</label>
+                        <input type="number" id="reqP" class="w-full p-2 border rounded mt-1">
+                    </div>
+                    <div>
+                        <label class="text-xs text-rose-600 font-bold">K Target (kg/ha)</label>
+                        <input type="number" id="reqK" class="w-full p-2 border rounded mt-1">
+                    </div>
+                </div>
+             </div>
+        </section>
+
+        <!-- PRINT AREA: THE SLIP -->
+        <section class="print-only print-area">
+            <div class="bg-white border-2 border-dashed border-slate-900 p-8 receipt-font text-slate-900">
+                <div class="text-center border-b-2 border-slate-900 pb-4 mb-4">
+                    <h2 class="text-2xl font-bold">AGRICalc Pro</h2>
+                    <p class="text-[10px] tracking-widest uppercase">Designed & Developed by-Hem Chand</p>
+                    <p class="text-[10px] tracking-widest uppercase">Precision Agri-Input Slip</p>
+                    <p class="text-[10px] mt-2" id="slipDate"></p>
+                </div>
+
+                <div class="space-y-1 mb-4 text-sm">
+                    <div class="flex justify-between"><span>CROP:</span> <span id="slipCrop" class="font-bold">-</span></div>
+                    <div class="flex justify-between"><span>AREA:</span> <span id="slipArea" class="font-bold">-</span></div>
+                    <div class="text-[10px] text-right" id="slipConverted">-</div>
+                </div>
+
+                <div class="bg-slate-50 p-2 mb-4 text-[10px] border border-slate-200">
+                    <div class="flex justify-between"><span>GERMINATION:</span> <span id="slipGerm">-</span></div>
+                    <div class="flex justify-between"><span>PURITY:</span> <span id="slipPurity">-</span></div>
+                </div>
+
+                <div class="space-y-1 mb-6 py-4 border-y border-slate-900">
+                    <h4 class="font-bold text-xs mb-2 underline uppercase">Input Requirements</h4>
+                    <div class="flex justify-between text-base">
+                        <span>ADJ. SEED:</span> 
+                        <span id="slipSeed" class="font-bold text-right">-</span>
+                    </div>
+                    <div class="flex justify-between text-base">
+                        <span>ORGN. MANURE:</span> 
+                        <span id="slipFYM" class="font-bold text-right">-</span>
+                    </div>
+                </div>
+
+                <div class="space-y-1 mb-6">
+                    <h4 class="font-bold text-xs mb-2 underline uppercase">Fertilizer Schedule</h4>
+                    <div id="slipFertRows" class="space-y-1">
+                        <!-- Rows via JS -->
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-900 text-center">
+                    <p class="text-[11px] font-bold" id="slipPop">-</p>
+                    <p class="text-[10px] italic mt-6 opacity-70 tracking-tighter">*** Adjusted for Seed Quality ***</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const crops = {
+            rice: { name: "Rice (Paddy)", seed: 40, n: 100, p: 60, k: 40, fym: 10, row: 20, plant: 15 },
+            wheat: { name: "Wheat", seed: 100, n: 120, p: 60, k: 40, fym: 10, row: 22.5, plant: 10 },
+            maize: { name: "Maize", seed: 20, n: 120, p: 60, k: 40, fym: 15, row: 60, plant: 20 },
+            millet: { name: "Millet", seed: 10, n: 60, p: 40, k: 30, fym: 8, row: 25, plant: 10 },
+            coriander: { name: "Coriander", seed: 12, n: 60, p: 40, k: 20, fym: 15, row: 30, plant: 10 },
+            fennel: { name: "Fennel", seed: 10, n: 90, p: 40, k: 0, fym: 10, row: 45, plant: 20 },
+            dill: { name: "Dill", seed: 5, n: 40, p: 20, k: 0, fym: 10, row: 30, plant: 10 },
+            cumin: { name: "Cumin", seed: 12, n: 30, p: 20, k: 0, fym: 10, row: 30, plant: 10 },
+            ginger: { name: "Ginger", seed: 1500, n: 75, p: 50, k: 50, fym: 25, row: 30, plant: 25 },
+            turmeric: { name: "Turmeric", seed: 2000, n: 60, p: 60, k: 90, fym: 25, row: 45, plant: 25 },
+            onion: { name: "Onion", seed: 8, n: 100, p: 50, k: 50, fym: 20, row: 15, plant: 10 },
+            garlic: { name: "Garlic", seed: 500, n: 100, p: 50, k: 50, fym: 20, row: 15, plant: 10 },
+            potato: { name: "Potato", seed: 2500, n: 150, p: 100, k: 120, fym: 25, row: 60, plant: 20 },
+            cauliflower: { name: "Cauliflower", seed: 0.5, n: 120, p: 60, k: 60, fym: 20, row: 60, plant: 45 },
+            cabbage: { name: "Cabbage", seed: 0.4, n: 120, p: 60, k: 60, fym: 20, row: 45, plant: 45 },
+            tomato: { name: "Tomato", seed: 0.4, n: 100, p: 80, k: 60, fym: 20, row: 60, plant: 45 },
+            cucumber: { name: "Cucumber", seed: 2.5, n: 50, p: 50, k: 50, fym: 15, row: 150, plant: 60 },
+            bitter_gourd: { name: "Bitter Gourd", seed: 4, n: 60, p: 40, k: 40, fym: 15, row: 200, plant: 45 }
+        };
+
+        function getAreaInHa() {
+            const val = parseFloat(document.getElementById('areaInput').value) || 0;
+            const unit = document.getElementById('areaUnit').value;
+            const haFactors = {
+                ha: 1, acre: 0.404686, sqm: 0.0001, sqft: 0.0000092903,
+                bigha: 0.677263, kattha: 0.033863, dhur: 0.001693,
+                ropani: 0.050874, aana: 0.003179
+            };
+            const ha = val * haFactors[unit];
+            document.getElementById('activeAreaDisplay').innerText = ha.toFixed(4);
+            document.getElementById('areaBreakdown').innerText = Calculated for ${val} ${unit};
+            document.getElementById('slipConverted').innerText = ${val} ${unit.toUpperCase()} = ${ha.toFixed(4)} HA;
+            return ha;
+        }
+
+        function updateCropProfile() {
+            const crop = crops[document.getElementById('cropSelect').value];
+            if(!crop) return;
+            document.getElementById('seedRate').value = crop.seed;
+            document.getElementById('reqN').value = crop.n;
+            document.getElementById('reqP').value = crop.p;
+            document.getElementById('reqK').value = crop.k;
+            document.getElementById('fymRate').value = crop.fym;
+            document.getElementById('rowS').value = crop.row;
+            document.getElementById('plantS').value = crop.plant;
+            document.getElementById('statSeed').innerText = "---";
+            document.getElementById('statFert').innerText = "---";
+        }
+
+        function calculateAll() {
+            const ha = getAreaInHa();
+            const cropKey = document.getElementById('cropSelect').value;
+            const crop = crops[cropKey];
+
+            // 1. Adjusted Seed Calculation (Real Value Formula)
+            const baseRate = parseFloat(document.getElementById('seedRate').value) || 0;
+            const germ = parseFloat(document.getElementById('germination').value) || 100;
+            const purity = parseFloat(document.getElementById('purity').value) || 100;
+            
+            // Formula: Adjusted Rate = (Base Rate * 100 * 100) / (Germination * Purity)
+            const adjustedRatePerHa = (baseRate * 100 * 100) / (germ * purity);
+            const totalSeed = adjustedRatePerHa * ha;
+            
+            const seedText = totalSeed < 1 ? (totalSeed * 1000).toFixed(0) + " g" : totalSeed.toFixed(2) + " kg";
+            document.getElementById('statSeed').innerText = seedText;
+            document.getElementById('slipSeed').innerText = seedText;
+            
+            // Adjustment Note
+            if (germ < 100 || purity < 100) {
+                const increase = ((adjustedRatePerHa - baseRate) / baseRate * 100).toFixed(1);
+                document.getElementById('seedAdjustmentNote').innerText = +${increase}% extra seed due to quality;
+            } else {
+                document.getElementById('seedAdjustmentNote').innerText = "";
+            }
+
+            // 2. Manure
+            const fymR = parseFloat(document.getElementById('fymRate').value) || 0;
+            const totalFym = fymR * ha;
+            document.getElementById('slipFYM').innerText = totalFym.toFixed(2) + " Tons";
+
+            // 3. Fertilizers
+            const n = (parseFloat(document.getElementById('reqN').value) || 0) * ha;
+            const p = (parseFloat(document.getElementById('reqP').value) || 0) * ha;
+            const k = (parseFloat(document.getElementById('reqK').value) || 0) * ha;
+
+            const dap = p / 0.46;
+            const nFromDap = dap * 0.18;
+            const urea = Math.max(0, (n - nFromDap) / 0.46);
+            const mop = k / 0.60;
+
+            document.getElementById('statFert').innerText = (dap + urea + mop).toFixed(1) + " kg";
+
+            let fertHtml = "";
+            if(dap > 0) fertHtml += <div class="flex justify-between"><span>DAP (18-46-0):</span> <span>${dap.toFixed(1)} kg</span></div>;
+            if(urea > 0) fertHtml += <div class="flex justify-between"><span>UREA (46-0-0):</span> <span>${urea.toFixed(1)} kg</span></div>;
+            if(mop > 0) fertHtml += <div class="flex justify-between"><span>MOP (0-0-60):</span> <span>${mop.toFixed(1)} kg</span></div>;
+            document.getElementById('slipFertRows').innerHTML = fertHtml || "<div>Zero Requirement</div>";
+
+            // 4. Population
+            const r = parseFloat(document.getElementById('rowS').value) || 0;
+            const ps = parseFloat(document.getElementById('plantS').value) || 0;
+            const pop = (r > 0 && ps > 0) ? (ha * 10000) / ((r/100)*(ps/100)) : 0;
+            document.getElementById('slipPop').innerText = pop > 0 ? Estimated Plants/seeds Population: ${Math.round(pop).toLocaleString()} : "";
+
+            // Slip Headers
+            document.getElementById('slipCrop').innerText = crop.name.toUpperCase();
+            document.getElementById('slipArea').innerText = document.getElementById('areaInput').value + " " + document.getElementById('areaUnit').value.toUpperCase();
+            document.getElementById('slipDate').innerText = new Date().toLocaleString();
+            document.getElementById('slipGerm').innerText = germ + "%";
+            document.getElementById('slipPurity').innerText = purity + "%";
+        }
+
+        window.onload = updateCropProfile;
+    </script>
+</body>
+</html>
