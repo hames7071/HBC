@@ -273,6 +273,14 @@
             bitter_gourd: { name: "Bitter Gourd", seed: 4, n: 60, p: 40, k: 40, fym: 15, row: 200, plant: 45 }
         };
 
+        // Helper to format weights (kg/g conversion)
+        function formatWeight(kgValue, decimals = 2) {
+            if (kgValue < 1) {
+                return (kgValue * 1000).toFixed(decimals) + " g";
+            }
+            return kgValue.toFixed(decimals) + " kg";
+        }
+
         function getAreaInHa() {
             const val = parseFloat(document.getElementById('areaInput').value) || 0;
             const unit = document.getElementById('areaUnit').value;
@@ -317,7 +325,7 @@
             const adjustedRatePerHa = (baseRate * 100 * 100) / (Math.max(1, germ) * Math.max(1, purity));
             const totalSeed = adjustedRatePerHa * ha;
             
-            const seedText = totalSeed < 1 ? (totalSeed * 1000).toFixed(1) + " g" : totalSeed.toFixed(2) + " kg";
+            const seedText = formatWeight(totalSeed);
             document.getElementById('statSeed').innerText = seedText;
             document.getElementById('slipSeed').innerText = seedText;
             
@@ -344,12 +352,12 @@
             const urea = Math.max(0, (targetN - nFromDap) / 0.46);
             const mop = targetK / 0.60;
 
-            document.getElementById('statFert').innerText = (dap + urea + mop).toFixed(1) + " kg";
+            document.getElementById('statFert').innerText = formatWeight(dap + urea + mop, 1);
 
             let fertHtml = "";
-            if(dap > 0) fertHtml += `<div class="flex justify-between"><span>DAP (18-46-0):</span> <span>${dap.toFixed(1)} kg</span></div>`;
-            if(urea > 0) fertHtml += `<div class="flex justify-between"><span>UREA (46-0-0):</span> <span>${urea.toFixed(1)} kg</span></div>`;
-            if(mop > 0) fertHtml += `<div class="flex justify-between"><span>MOP (0-0-60):</span> <span>${mop.toFixed(1)} kg</span></div>`;
+            if(dap > 0) fertHtml += `<div class="flex justify-between"><span>DAP (18-46-0):</span> <span>${formatWeight(dap, 1)}</span></div>`;
+            if(urea > 0) fertHtml += `<div class="flex justify-between"><span>UREA (46-0-0):</span> <span>${formatWeight(urea, 1)}</span></div>`;
+            if(mop > 0) fertHtml += `<div class="flex justify-between"><span>MOP (0-0-60):</span> <span>${formatWeight(mop, 1)}</span></div>`;
             document.getElementById('slipFertRows').innerHTML = fertHtml || "<div>Requirement Not Set</div>";
 
             // 4. Population Estimation
@@ -371,4 +379,3 @@
     </script>
 </body>
 </html>
-
