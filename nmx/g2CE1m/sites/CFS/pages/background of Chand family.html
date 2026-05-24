@@ -101,34 +101,36 @@
         }
         
         /* टेबलको स्टाइल */
-        @media screen and (max-width: 600px) {
-  /* Hide table headers, show them inside cells using ::before */
-  thead { display: none; }
-  
-  table, tbody, tr, td {
-    display: block;
-    width: 100%;
-  }
+    
+        table {
+            border-collapse: collapse;
+            font-size: 1em;
+            text-align: left;
+            margin: auto;
+            width: 100%;
+            overflow-x: auto;
+            padding: 20px 0;
+        }
+        td : :before{
+            content: attr(data-label);
+            position: absolute;
+            left: 10px;
+        }
 
-  tr {
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-  }
+        tr, td {
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+        }
 
-  td {
-    text-align: right;
-    padding-left: 50%;
-    position: relative;
-  }
+        tr {
+            background-color: #e9ecef;
+            color: #333;
+            text-transform: uppercase;
+        }
 
-  /* Use data-label attribute on your <td> elements */
-  td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 10px;
-    font-weight: bold;
-  }
-}
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
       
 
     </style>
