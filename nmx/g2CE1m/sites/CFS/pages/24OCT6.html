@@ -48,29 +48,30 @@
         }
 
         /* टेबलको स्टाइल */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 25px 0;
-            font-size: 1em;
-            text-align: left;
-        }
+  /* Add this to your existing CSS */
 
-        th, td {
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-        }
+/* Wrapper to prevent overflow */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    margin: 25px 0;
+}
 
-        th {
-            background-color: #e9ecef;
-            color: #333;
-            text-transform: uppercase;
-        }
+/* Ensure table doesn't exceed its container */
+table {
+    width: 100%;
+    min-width: 600px; /* Forces table to stay at a readable size */
+    border-collapse: collapse;
+}
 
-        tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-
+/* Optional: Better mobile padding for cells */
+@media screen and (max-width: 600px) {
+    th, td {
+        padding: 8px 10px;
+        font-size: 0.9em;
+    }
+}
         /* उपाधि हाइलाइट गर्नका लागि */
         .title-highlight {
             font-weight: bold;
@@ -127,6 +128,8 @@
      <p>यी सबै पदवीहरूले प्राचीन र मध्यकालीन भारतमा शासकको शक्ति, अधिकार र शासित क्षेत्रको आकारमा रहेको भिन्नतालाई देखाउँछन्। मुख्य भिन्नता उनीहरूको भौगोलिक विस्तार र अन्य शासकहरूमाथि रहेको प्रभुत्व हो।</p>
 
     <h2>संक्षिप्त विवरण र मुख्य भिन्नता</h2>
+     <div class="table-wrapper">
+         
     <table>
         <thead>
             <tr>
@@ -158,7 +161,7 @@
             </tr>
         </tbody>
     </table>
-
+     </div>
     <hr>
 
     <h2>भारतीय राजसी उपाधिहरूको विस्तृत पदानुक्रम</h2>
