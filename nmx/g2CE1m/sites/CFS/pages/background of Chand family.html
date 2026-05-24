@@ -101,14 +101,22 @@
         }
         
         /* टेबलको स्टाइल */
+        .table-container {
+ 
+}
         table {
-            width: 100%;
             border-collapse: collapse;
             font-size: 1em;
             text-align: left;
             margin: auto;
-            overflow: hidden;
+            width: 100%;
+            overflow-x: auto;
             padding: 20px 0;
+        }
+        td : :before{
+            content: attr(data-label);
+            position: absolute;
+            left: 10px;
         }
 
         tr, td {
