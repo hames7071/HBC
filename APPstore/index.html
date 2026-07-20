@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="ne">
 <head>
@@ -190,26 +190,30 @@
                     </div>
                 </div>
 
-                <!-- एपको विशेषता तथ्याङ्क (Stats Panel) -->
-                <div class="grid grid-cols-3 gap-2 bg-slate-50/50 rounded-2xl p-3 sm:p-4 mb-6 border border-slate-100/50 text-center">
+                <!-- एपको विशेषता तथ्याङ्क (Stats Panel - Updated to 4 columns) -->
+                <div class="grid grid-cols-4 gap-1.5 bg-slate-50/50 rounded-2xl p-3 border border-slate-100/50 text-center">
                     <div>
-                        <div class="flex items-center justify-center gap-1 text-slate-900 font-bold text-sm sm:text-base">
-                            <span id="modalRating">4.9</span> <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 text-amber-400"></i>
+                        <div class="flex items-center justify-center gap-0.5 text-slate-900 font-bold text-xs sm:text-sm">
+                            <span id="modalRating">4.9</span> <i data-lucide="star" class="w-3 h-3 fill-amber-400 text-amber-400"></i>
                         </div>
-                        <div class="text-[10px] text-slate-400 font-medium uppercase mt-0.5">मूल्याङ्कन</div>
+                        <div class="text-[9px] text-slate-400 font-medium uppercase mt-0.5">मूल्याङ्कन</div>
                     </div>
                     <div class="border-x border-slate-200/60">
-                        <div id="modalSize" class="text-slate-900 font-bold text-sm sm:text-base">8.3 MB</div>
-                        <div class="text-[10px] text-slate-400 font-medium uppercase mt-0.5">साइज</div>
+                        <div id="modalSize" class="text-slate-900 font-bold text-xs sm:text-sm">8.3 MB</div>
+                        <div class="text-[9px] text-slate-400 font-medium uppercase mt-0.5">साइज</div>
+                    </div>
+                    <div class="border-r border-slate-200/60">
+                        <div id="modalVersion" class="text-slate-900 font-bold text-xs sm:text-sm">1.0</div>
+                        <div class="text-[9px] text-slate-400 font-medium uppercase mt-0.5 font-sans">भर्सन</div>
                     </div>
                     <div>
-                        <div id="modalVersion" class="text-slate-900 font-bold text-sm sm:text-base">1.0</div>
-                        <div class="text-[10px] text-slate-400 font-medium uppercase mt-0.5 font-sans">भर्सन</div>
+                        <div id="modalDownloads" class="text-brand-600 font-extrabold text-xs sm:text-sm">0</div>
+                        <div class="text-[9px] text-slate-400 font-medium uppercase mt-0.5">डाउनलोड</div>
                     </div>
                 </div>
 
                 <!-- एप विवरण (App Description) -->
-                <div class="mb-6">
+                <div class="mb-6 mt-6">
                     <h4 class="font-bold text-slate-900 mb-2 text-sm sm:text-base">एपको बारेमा</h4>
                     <p id="modalDesc" class="text-slate-500 text-xs sm:text-sm leading-relaxed whitespace-pre-line"></p>
                 </div>
@@ -281,6 +285,7 @@
                 version: "1.0",
                 desc: "यो एप सुदूरपश्चिम विश्वविद्यालयको कृषि विज्ञान संकाय (SOA) का विद्यार्थीहरू र साथीहरूको शैक्षिक आवश्यकतालाई मध्यनजर गरी बनाइएको हो। यसको मुख्य उद्देश्य शैक्षिक सामग्रीहरू सहजै आदान-प्रदान गर्न मिल्ने मञ्च प्रदान गर्नु हो।\n\nयस एपले विभिन्न अध्ययन सामग्रीहरू, परीक्षाका FAQ हरू र संकाय भित्रका विविध गतिविधिहरू र अपडेटहरू साझेदारी गर्न मद्दत गर्दछ।\n\nमुख्य विशेषताहरू:\n- दैनिक स्लाइड नोटहरू तथा प्रश्नोत्तरहरू\n- व्यवस्थित सूची वर्गीकरण\n- सहज र न्यूनतम विज्ञापन दृश्य।",
                 apk: "apks/fwusoa.apk",
+                baseDownloads: 16, // सुरुआती कल्पित डाउनलोड संख्या
                 screenshots: [             
                     "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi_m5cN36SwfDTa_DuxRCkIz2pNBlUrATvwZrPQAWHrBgIr-CHvKowIZ-cLJUIc55XxukiHRfy03YNMt0mcAiPXi0z529bNFRZORq4-uAlhfZh_owVxJLjYgmdEPskeq2xfpuzhYVUQLLGbsxTxd6dkdefegz8yokx5Hc_Y8mnrWaEB53wj65Ls7HqLrxc/s2400/1000162614.jpg",
                     "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjuBYCZVRJ-aDlyl2sdiQhRHnKyzgGnBzp9jkNCeNhyAKL_4CXvUYcGenBjifdq_cPghwUkvVJGUgqoN66DjcUURgvmW3rfHr6P5gJt5noGL5uXZuhtUvFFrMna7thSpQtRGQibxEBoHdRoAN_DooydPISBlkEv3LGMCQ0pvDdHLdO9P7oPyiaQuL1JmiY/s2400/1000162611.jpg",
@@ -301,6 +306,7 @@
                 version: "1.0.3",
                 desc: "ब्रह्माण्डलाई रक्षा गर्नको लागि क्लासिक आर्केड शूटर खेल। आफ्नो स्पेसशिप नियन्त्रण गर्नुहोस् र शत्रु आक्रमणबाट बच्नुहोस्। \n\nयसमा ५० भन्दा बढी रोमाञ्चक तहहरू र मिठो ब्याकग्राउण्ड संगीत समावेस गरिएको छ।",
                 apk: "apks/space-defender.apk",
+                baseDownloads: 0,
                 screenshots: [
                     "assets/screenshots/space-1.png",
                     "assets/screenshots/space-2.png"
@@ -319,6 +325,7 @@
                 version: "3.5.0",
                 desc: "तपाईंको फोनको ब्याट्री स्वास्थ्य, चार्ज हुने गति, र तापक्रम सजिलै ट्र्याक गर्नुहोस्। यसमा ब्याट्री धेरै तातो हुँदा सूचना दिने विशेष फिचर पनि छ।",
                 apk: "apks/battery-monitor.apk",
+                baseDownloads: 0,
                 screenshots: [
                     "assets/screenshots/battery-1.png"
                 ]
@@ -326,6 +333,36 @@
         ];
 
         let currentCategory = 'All';
+
+        // लोकल स्टोरेज (LocalStorage) बाट डाउनलोड काउन्ट तान्ने
+        function getDownloadsCount(app) {
+            const stored = localStorage.getItem(`mobistore_downloads_${app.id}`);
+            if (stored) {
+                return parseInt(stored, 10);
+            }
+            // यदि स्टोरेज खालि छ भने बेस काउन्ट हाल्ने
+            localStorage.setItem(`mobistore_downloads_${app.id}`, app.baseDownloads);
+            return app.baseDownloads;
+        }
+
+        // डाउनलोड भएको रेकर्ड थप्ने कार्य
+        function recordDownload(appId) {
+            const app = apps.find(a => a.id === appId);
+            if (app) {
+                let currentCount = getDownloadsCount(app);
+                currentCount++; // डाउनलोड १ ले बढाउने
+                localStorage.setItem(`mobistore_downloads_${appId}`, currentCount);
+                
+                // पपअप मोडेलमा तत्कालै संख्या परिवर्तन गरिदिने
+                const downloadsDiv = document.getElementById('modalDownloads');
+                if (downloadsDiv) {
+                    downloadsDiv.textContent = `${currentCount} +`;
+                }
+                
+                // मुख्य स्क्रिनको एप लिस्टमा पनि संख्या अपडेट गर्ने
+                renderApps();
+            }
+        }
 
         // स्टोर सुरुवाती अवस्थामा फर्काउने
         function resetStore() {
@@ -376,6 +413,9 @@
                 card.className = "bg-white p-5 rounded-2xl border border-slate-100 hover:border-slate-200 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer flex flex-col justify-between group";
                 card.onclick = () => openModal(app.id);
 
+                // सुरक्षित रूपमा डाउनलोड काउन्ट लिने
+                const downloadsCount = getDownloadsCount(app);
+
                 card.innerHTML = `
                     <div>
                         <div class="flex items-start gap-4 mb-4">
@@ -385,9 +425,15 @@
                             <div class="flex-1 min-w-0">
                                 <h3 class="text-base sm:text-lg font-bold text-slate-900 truncate group-hover:text-brand-600 transition-colors duration-150">${app.name}</h3>
                                 <p class="text-xs text-slate-400 truncate mt-0.5">${app.dev}</p>
-                                <div class="flex items-center gap-1 mt-1.5">
-                                    <span class="text-xs font-bold text-slate-700">${app.rating}</span>
-                                    <i data-lucide="star" class="w-3 h-3 fill-amber-400 text-amber-400"></i>
+                                <div class="flex items-center gap-3 mt-1.5">
+                                    <div class="flex items-center gap-0.5">
+                                        <span class="text-xs font-bold text-slate-700">${app.rating}</span>
+                                        <i data-lucide="star" class="w-3 h-3 fill-amber-400 text-amber-400"></i>
+                                    </div>
+                                    <div class="flex items-center gap-1 text-slate-400 text-xs font-medium">
+                                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                                        <span>${downloadsCount}+</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -452,6 +498,9 @@
             const app = apps.find(a => a.id === id);
             if (!app) return;
 
+            // डाउनलोड तथ्याङ्क प्राप्त गर्ने
+            const currentDownloads = getDownloadsCount(app);
+
             document.getElementById('modalTitle').textContent = app.name;
             document.getElementById('modalDev').textContent = app.dev;
             document.getElementById('modalRating').textContent = app.rating;
@@ -459,7 +508,16 @@
             document.getElementById('modalVersion').textContent = app.version;
             document.getElementById('modalDesc').textContent = app.desc;
             document.getElementById('modalCategory').textContent = app.category;
-            document.getElementById('modalDownloadBtn').href = app.apk;
+            document.getElementById('modalDownloads').textContent = `${currentDownloads} +`;
+            
+            // डाउनलोड लिङ्क सेट गर्ने
+            const downloadBtn = document.getElementById('modalDownloadBtn');
+            downloadBtn.href = app.apk;
+            
+            // क्लिक गर्दा डाउनलोड बढाउने घटना
+            downloadBtn.onclick = () => {
+                recordDownload(app.id);
+            };
             
             const iconContainer = document.getElementById('modalIconContainer');
             iconContainer.className = "w-20 h-20 sm:w-28 sm:h-28 rounded-2xl sm:rounded-3xl shadow-md overflow-hidden border border-slate-100 bg-white flex items-center justify-center shrink-0";
@@ -542,3 +600,5 @@
     </script>
 </body>
 </html>
+
+```
