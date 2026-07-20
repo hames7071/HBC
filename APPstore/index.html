@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MobiStore - Direct Android App Downloads</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 900: '#312e81' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Hide scrollbar for clean horizontal scrolling */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .modal-open { overflow: hidden; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Navbar -->
+    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer" onclick="renderApps()">
+                    <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                        <i data-lucide="smartphone"></i>
+                    </div>
+                    <span class="font-bold text-2xl tracking-tight text-gray-900">Mobi<span class="text-brand-600">Store</span></span>
+                </div>
+
+                <!-- Search Bar (Desktop) -->
+                <div class="hidden md:flex flex-1 max-w-md mx-8">
+                    <div class="relative w-full">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i data-lucide="search" class="h-5 w-5 text-gray-400"></i>
+                        </div>
+                        <input type="text" id="searchInput" onkeyup="handleSearch()" class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-full leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 sm:text-sm transition-all" placeholder="Search for apps, games...">
+                    </div>
+                </div>
+
+                <!-- GitHub Link -->
+                <div class="flex items-center">
+                    <a href="https://github.com" target="_blank" class="text-gray-500 hover:text-gray-900 p-2 rounded-full hover:bg-gray-100 transition">
+                        <i data-lucide="github"></i>
+                    </a>
+                </div>
+            </div>
+            <!-- Search Bar (Mobile) -->
+            <div class="md:hidden pb-4">
+                <div class="relative w-full">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i data-lucide="search" class="h-5 w-5 text-gray-400"></i>
+                    </div>
+                    <input type="text" id="searchInputMobile" onkeyup="handleSearchMobile()" class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-full leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 sm:text-sm" placeholder="Search apps...">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Hero Section -->
+        <div id="heroSection" class="relative rounded-3xl bg-gradient-to-r from-brand-600 to-purple-700 overflow-hidden shadow-xl mb-12">
+            <div class="absolute inset-0 bg-black/10"></div>
+            <div class="relative px-6 py-12 sm:px-12 sm:py-16 md:py-20 flex flex-col md:flex-row items-center justify-between">
+                <div class="text-white max-w-xl text-center md:text-left mb-8 md:mb-0">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 leading-tight">Your Direct Source for My Custom Apps.</h1>
+                    <p class="text-brand-100 text-lg mb-6">No tracking. No ads. Just pure, open-source Android applications developed and hosted directly on GitHub.</p>
+                    <button onclick="document.getElementById('apps-grid').scrollIntoView({behavior: 'smooth'})" class="bg-white text-brand-600 font-bold px-8 py-3 rounded-full hover:bg-brand-50 transition shadow-lg transform hover:-translate-y-1">
+                        Explore Apps
+                    </button>
+                </div>
+                <div class="hidden lg:block w-64 h-64 relative">
+                    <!-- Abstract Device Graphic -->
+                    <div class="absolute inset-0 bg-white/20 rounded-3xl rotate-12 backdrop-blur-sm"></div>
+                    <div class="absolute inset-0 bg-gradient-to-tr from-white to-brand-50 rounded-3xl -rotate-6 shadow-2xl border-4 border-white flex flex-col items-center justify-center p-4">
+                        <div class="w-16 h-16 bg-brand-500 rounded-2xl mb-4 text-white flex items-center justify-center text-3xl shadow-inner">⚡</div>
+                        <div class="h-2 w-24 bg-gray-200 rounded-full mb-2"></div>
+                        <div class="h-2 w-16 bg-gray-200 rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="flex gap-4 overflow-x-auto no-scrollbar mb-8 pb-2" id="categoryFilter">
+            <button onclick="filterCategory('All')" class="category-btn active px-6 py-2 rounded-full bg-brand-600 text-white font-medium text-sm whitespace-nowrap transition shadow-md">All Apps</button>
+            <button onclick="filterCategory('Educational')" class="category-btn px-6 py-2 rounded-full bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 font-medium text-sm whitespace-nowrap transition">Games</button>
+            <button onclick="filterCategory('Tools')" class="category-btn px-6 py-2 rounded-full bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 font-medium text-sm whitespace-nowrap transition">Tools</button>
+            <button onclick="filterCategory('Productivity')" class="category-btn px-6 py-2 rounded-full bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 font-medium text-sm whitespace-nowrap transition">Productivity</button>
+        </div>
+
+        <!-- Section Title -->
+        <div class="flex items-center justify-between mb-6">
+            <h2 id="sectionTitle" class="text-2xl font-bold text-gray-900">Featured Apps</h2>
+            <span id="appCount" class="text-sm text-gray-500 font-medium"></span>
+        </div>
+
+        <!-- Apps Grid -->
+        <div id="apps-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- App Cards will be injected here by JS -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden flex-col items-center justify-center py-20 text-center">
+            <i data-lucide="package-search" class="w-20 h-20 text-gray-300 mb-4"></i>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">No apps found</h3>
+            <p class="text-gray-500">Try adjusting your search or category filter.</p>
+        </div>
+
+        <!-- Sideloading Instructions -->
+        <section class="mt-24 bg-white border border-gray-200 p-8 sm:p-10 rounded-3xl shadow-sm">
+            <div class="flex flex-col md:flex-row gap-8 items-center">
+                <div class="flex-1">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <i data-lucide="shield-check" class="text-green-500"></i> How to Install (Sideload)
+                    </h3>
+                    <p class="text-gray-600 mb-6">Since these apps are hosted outside the Google Play Store, you need to grant your device permission to install them.</p>
+                    <ul class="space-y-4 text-gray-700">
+                        <li class="flex items-start gap-3">
+                            <span class="bg-brand-100 text-brand-700 w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">1</span>
+                            <span>Download the <b>.apk</b> file by clicking "Download" on any app.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-brand-100 text-brand-700 w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">2</span>
+                            <span>Open the downloaded file. Your phone will show a warning about <b>Unknown Sources</b>.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-brand-100 text-brand-700 w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">3</span>
+                            <span>Click <b>Settings</b> on the prompt and toggle on <b>"Allow from this source"</b>.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-brand-100 text-brand-700 w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">4</span>
+                            <span>Go back and click <b>Install</b>. You're all set!</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-1/3 bg-gray-50 rounded-2xl p-6 border border-gray-100 text-center">
+                    <i data-lucide="file-warning" class="w-12 h-12 text-yellow-500 mx-auto mb-3"></i>
+                    <h4 class="font-bold text-gray-900 mb-2">Play Protect Warning</h4>
+                    <p class="text-sm text-gray-500">Google Play Protect might flag these apps because they are new/unknown. You can safely tap <b>"More details"</b> -> <b>"Install anyway"</b>.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- App Details Modal -->
+    <div id="appModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+        <div class="absolute bottom-0 md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full md:w-[600px] bg-white rounded-t-3xl md:rounded-3xl shadow-2xl transition-transform transform translate-y-full md:translate-y-0 duration-300 ease-out flex flex-col max-h-[90vh]" id="modalContent">
+            
+            <!-- Modal Header / Drag Handle for mobile -->
+            <div class="w-full flex justify-center py-3 md:hidden" onclick="closeModal()">
+                <div class="w-12 h-1.5 bg-gray-300 rounded-full"></div>
+            </div>
+            
+            <div class="relative w-full h-32 md:h-40 bg-gradient-to-r from-brand-600 to-purple-600 md:rounded-t-3xl shrink-0">
+                <button onclick="closeModal()" class="absolute top-4 right-4 bg-black/20 hover:bg-black/40 text-white rounded-full p-2 transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body (Scrollable) -->
+            <div class="px-6 pb-6 overflow-y-auto no-scrollbar">
+                <div class="flex items-end gap-5 -mt-12 md:-mt-16 mb-6 relative z-10">
+                    <div id="modalIcon" class="w-24 h-24 md:w-32 md:h-32 rounded-2xl md:rounded-3xl shadow-xl flex items-center justify-center text-4xl md:text-6xl border-4 border-white bg-white">
+                        <!-- Icon Injected via JS -->
+                    </div>
+                    <div class="pb-2 flex-1">
+                        <h2 id="modalTitle" class="text-2xl md:text-3xl font-extrabold text-gray-900 leading-tight">App Name</h2>
+                        <p id="modalDev" class="text-brand-600 font-medium">Developer Name</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-6 mb-6 border-y border-gray-100 py-4">
+                    <div class="text-center">
+                        <div class="flex items-center justify-center gap-1 text-gray-900 font-bold">
+                            <span id="modalRating">4.8</span> <i data-lucide="star" class="w-4 h-4 fill-yellow-400 text-yellow-400"></i>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">Rating</div>
+                    </div>
+                    <div class="w-px bg-gray-200"></div>
+                    <div class="text-center">
+                        <div id="modalSize" class="text-gray-900 font-bold">25 MB</div>
+                        <div class="text-xs text-gray-500 mt-1">Size</div>
+                    </div>
+                    <div class="w-px bg-gray-200"></div>
+                    <div class="text-center">
+                        <div id="modalVersion" class="text-gray-900 font-bold">1.0.0</div>
+                        <div class="text-xs text-gray-500 mt-1">Version</div>
+                    </div>
+                </div>
+
+                <h4 class="font-bold text-gray-900 mb-2 text-lg">About this app</h4>
+                <p id="modalDesc" class="text-gray-600 leading-relaxed mb-6 whitespace-pre-line"></p>
+
+                <!-- Screenshots placeholder -->
+                <h4 class="font-bold text-gray-900 mb-3 text-lg">Screenshots</h4>
+                <div class="flex gap-3 overflow-x-auto no-scrollbar pb-4 snap-x">
+                    <div class="w-32 h-56 bg-gray-100 rounded-xl shrink-0 snap-center flex items-center justify-center border border-gray-200">
+                        <i data-lucide="image" class="text-gray-300 w-8 h-8"></i>
+                    </div>
+                    <div class="w-32 h-56 bg-gray-100 rounded-xl shrink-0 snap-center flex items-center justify-center border border-gray-200">
+                        <i data-lucide="image" class="text-gray-300 w-8 h-8"></i>
+                    </div>
+                    <div class="w-32 h-56 bg-gray-100 rounded-xl shrink-0 snap-center flex items-center justify-center border border-gray-200">
+                        <i data-lucide="image" class="text-gray-300 w-8 h-8"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 md:p-6 border-t border-gray-100 bg-gray-50 md:rounded-b-3xl shrink-0">
+                <a id="modalDownloadBtn" href="#" class="w-full flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 px-6 rounded-xl transition shadow-lg shadow-brand-500/30">
+                    <i data-lucide="download" class="w-5 h-5"></i>
+                    Download APK
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-12 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2 opacity-50">
+                <i data-lucide="smartphone" class="w-5 h-5"></i>
+                <span class="font-bold text-lg tracking-tight">MobiStore</span>
+            </div>
+            <p class="text-gray-500 text-sm text-center md:text-left">
+                &copy; <span id="year"></span> Hosted on GitHub Pages. Open source projects.
+            </p>
+            <div class="flex gap-4">
+                <a href="#" class="text-gray-400 hover:text-gray-900 transition"><i data-lucide="github" class="w-5 h-5"></i></a>
+                <a href="#" class="text-gray-400 hover:text-gray-900 transition"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Application Logic -->
+    <script>
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // --- APP DATA ---
+        // Replace this array with your actual applications
+        const apps = [
+            {
+                id: 1,
+                name: "FWU SOA Students Cafe",
+                category: "Educational",
+                icon: "https://blogger",
+                iconColor: "bg-green-100 text-green-600",
+                dev: "Hem Chand",
+                rating: 4.9,
+                size: "8.37 MB",
+                version: "1.0",
+                desc: "App cater to the needs of students / colleagues at Far Western University's School of Agriculture (SOA). Its primary purpose is to provide an accessible platform for academic references, enabling students to easily access study materials and share ideas. The app also serves as a hub for fostering collaboration among colleagues by sharing activities, events, and updates within the academic community. The app is not officially affiliated with administration or official of Far Western University or its Department. It operates independently to offer resources and support for educational and social purposes. It has been published on Google Workspace, ensuring accessibility for a wide range of users. This app is built for educational and information purposes. \n\nFeatures:\n- Slides Notes, Answer of FAQ etc\n- Categorized lists\n- customization support\n- minimum ad view.",
+                apk: "apks/fwusoa.apk" 
+            },
+            {
+                id: 2,
+                name: "Space Defender",
+                category: "Games",
+                icon: "🚀",
+                iconColor: "bg-purple-100 text-purple-600",
+                dev: "My Developer Name",
+                rating: 4.5,
+                size: "45.2 MB",
+                version: "1.0.3",
+                desc: "Defend your galaxy in this retro-styled arcade shooter. Swipe to move, tap to shoot special lasers. \n\nFeatures 50 levels of increasing difficulty and awesome chiptune music.",
+                apk: "apks/space-defender.apk"
+            },
+            {
+                id: 3,
+                name: "Battery Monitor",
+                category: "Tools",
+                icon: "🔋",
+                iconColor: "bg-blue-100 text-blue-600",
+                dev: "My Developer Name",
+                rating: 4.7,
+                size: "3.1 MB",
+                version: "3.5.0",
+                desc: "Track your battery health, charging speed, and temperature in real-time. Includes a home screen widget and charging alerts to prevent overcharging.",
+                apk: "apks/battery-monitor.apk"
+            },
+            {
+                id: 4,
+                name: "Note Vault",
+                category: "Productivity",
+                icon: "🔒",
+                iconColor: "bg-yellow-100 text-yellow-600",
+                dev: "My Developer Name",
+                rating: 4.8,
+                size: "8.7 MB",
+                version: "1.1.2",
+                desc: "Secure, encrypted note-taking app. Your notes are encrypted with AES-256 before saving to your device storage. Only opens with your fingerprint or PIN.",
+                apk: "apks/note-vault.apk"
+            },
+            {
+                id: 5,
+                name: "Sudoku Classic",
+                category: "Games",
+                icon: "🧩",
+                iconColor: "bg-red-100 text-red-600",
+                dev: "My Developer Name",
+                rating: 4.6,
+                size: "15.0 MB",
+                version: "2.0.0",
+                desc: "Clean and simple Sudoku. Four difficulty levels, auto-save, and minimal UI so you can focus on the puzzle.",
+                apk: "apks/sudoku.apk"
+            },
+            {
+                id: 6,
+                name: "WiFi Scanner",
+                category: "Tools",
+                icon: "📡",
+                iconColor: "bg-cyan-100 text-cyan-600",
+                dev: "My Developer Name",
+                rating: 4.4,
+                size: "5.5 MB",
+                version: "1.8.1",
+                desc: "Analyze your local WiFi networks, check channel interference, and find the best spot for your router.",
+                apk: "apks/wifi-scanner.apk"
+            }
+        ];
+
+        let currentCategory = 'All';
+
+        // Render Apps to Grid
+        function renderApps(appsToRender = apps) {
+            const grid = document.getElementById('apps-grid');
+            const emptyState = document.getElementById('emptyState');
+            const appCount = document.getElementById('appCount');
+            const heroSection = document.getElementById('heroSection');
+            
+            grid.innerHTML = '';
+            
+            // Handle Hero visibility based on search/filter state
+            if (appsToRender.length === apps.length && currentCategory === 'All' && !document.getElementById('searchInput').value && !document.getElementById('searchInputMobile').value) {
+                heroSection.style.display = 'block';
+                document.getElementById('sectionTitle').textContent = 'Featured Apps';
+            } else {
+                heroSection.style.display = 'none';
+                document.getElementById('sectionTitle').textContent = 'Search Results';
+            }
+
+            appCount.textContent = `${appsToRender.length} app${appsToRender.length !== 1 ? 's' : ''}`;
+
+            if (appsToRender.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+                return;
+            }
+
+            grid.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            emptyState.classList.remove('flex');
+
+            appsToRender.forEach(app => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition duration-200 cursor-pointer flex flex-col group";
+                card.onclick = () => openModal(app.id);
+
+                card.innerHTML = `
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="w-16 h-16 rounded-xl flex items-center justify-center text-3xl shadow-sm shrink-0 ${app.iconColor}">
+                            ${app.icon}
+                        </div>
+                        <div class="flex-1 overflow-hidden">
+                            <h3 class="text-lg font-bold text-gray-900 truncate group-hover:text-brand-600 transition">${app.name}</h3>
+                            <p class="text-sm text-gray-500 truncate">${app.dev}</p>
+                            <div class="flex items-center gap-1 mt-1">
+                                <span class="text-xs font-bold text-gray-700">${app.rating}</span>
+                                <i data-lucide="star" class="w-3 h-3 fill-yellow-400 text-yellow-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-auto">
+                        <div class="flex justify-between items-center text-xs text-gray-500 mb-3 px-1">
+                            <span class="bg-gray-100 px-2 py-1 rounded-md">${app.category}</span>
+                            <span>${app.size}</span>
+                        </div>
+                        <button class="w-full bg-brand-50 text-brand-700 font-semibold py-2 rounded-lg group-hover:bg-brand-600 group-hover:text-white transition">
+                            View Details
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        // Search Functionality
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            document.getElementById('searchInputMobile').value = query; // Sync inputs
+            filterApps(query, currentCategory);
+        }
+
+        function handleSearchMobile() {
+            const query = document.getElementById('searchInputMobile').value.toLowerCase();
+            document.getElementById('searchInput').value = query; // Sync inputs
+            filterApps(query, currentCategory);
+        }
+
+        // Category Filter
+        function filterCategory(category) {
+            currentCategory = category;
+            
+            // Update button styles
+            const buttons = document.querySelectorAll('.category-btn');
+            buttons.forEach(btn => {
+                if (btn.textContent.trim().includes(category)) {
+                    btn.classList.replace('bg-white', 'bg-brand-600');
+                    btn.classList.replace('text-gray-600', 'text-white');
+                    btn.classList.add('shadow-md');
+                } else {
+                    btn.classList.replace('bg-brand-600', 'bg-white');
+                    btn.classList.replace('text-white', 'text-gray-600');
+                    btn.classList.remove('shadow-md');
+                }
+            });
+
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            filterApps(query, currentCategory);
+        }
+
+        // Combined Filter
+        function filterApps(query, category) {
+            const filtered = apps.filter(app => {
+                const matchesSearch = app.name.toLowerCase().includes(query) || app.dev.toLowerCase().includes(query);
+                const matchesCategory = category === 'All' || app.category === category;
+                return matchesSearch && matchesCategory;
+            });
+            renderApps(filtered);
+        }
+
+        // Modal Logic
+        function openModal(id) {
+            const app = apps.find(a => a.id === id);
+            if (!app) return;
+
+            document.getElementById('modalTitle').textContent = app.name;
+            document.getElementById('modalDev').textContent = app.dev;
+            document.getElementById('modalRating').textContent = app.rating;
+            document.getElementById('modalSize').textContent = app.size;
+            document.getElementById('modalVersion').textContent = app.version;
+            document.getElementById('modalDesc').textContent = app.desc;
+            document.getElementById('modalDownloadBtn').href = app.apk;
+            
+            const iconContainer = document.getElementById('modalIcon');
+            iconContainer.className = `w-24 h-24 md:w-32 md:h-32 rounded-2xl md:rounded-3xl shadow-xl flex items-center justify-center text-4xl md:text-6xl border-4 border-white ${app.iconColor}`;
+            iconContainer.innerHTML = app.icon;
+
+            const modal = document.getElementById('appModal');
+            const content = document.getElementById('modalContent');
+            
+            modal.classList.remove('hidden');
+            document.body.classList.add('modal-open');
+            
+            // Small delay to allow display:block to apply before animating transform
+            setTimeout(() => {
+                content.classList.remove('translate-y-full');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('appModal');
+            const content = document.getElementById('modalContent');
+            
+            content.classList.add('translate-y-full');
+            document.body.classList.remove('modal-open');
+            
+            // Wait for animation to finish before hiding
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Initial Render
+        renderApps();
+
+    </script>
+</body>
+</html>
