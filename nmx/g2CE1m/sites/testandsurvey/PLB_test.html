@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Google Apps Script Web App</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f7fa;
+    }
+
+    .app {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      height: 60px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      z-index: 10;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .reload-btn {
+      background: #2563eb;
+      color: white;
+    }
+
+    .reload-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .fullscreen-btn {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .fullscreen-btn:hover {
+      background: #e5e7eb;
+    }
+
+    /* Content */
+    .content {
+      position: relative;
+      width: 100%;
+      flex: 1;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: white;
+    }
+
+    /* Loading */
+    .loader {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      background: #ffffff;
+      z-index: 5;
+      transition: opacity 0.3s ease;
+    }
+
+    .spinner {
+      width: 42px;
+      height: 42px;
+      border: 4px solid #e5e7eb;
+      border-top-color: #2563eb;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .loading-text {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Fullscreen mode */
+    .app.fullscreen {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+    }
+
+    .app.fullscreen .header {
+      display: none;
+    }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      .header {
+        height: 54px;
+        padding: 0 12px;
+      }
+
+      .title {
+        font-size: 15px;
+      }
+
+      button {
+        padding: 8px 10px;
+        font-size: 13px;
+      }
+
+      .fullscreen-btn {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app" id="app">
+
+    <!-- Header -->
+    <header class="header">
+
+      <div class="title">
+        Plant Breeding-QUIZ
+      </div>
+
+      <div class="actions">
+
+        <button
+          class="reload-btn"
+          id="reloadBtn"
+          type="button"
+        >
+          ↻ Reload
+        </button>
+
+        <button
+          class="fullscreen-btn"
+          id="fullscreenBtn"
+          type="button"
+        >
+          ⛶ Fullscreen
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <!-- Embedded Web App -->
+    <main class="content">
+
+      <div
+        class="loader"
+        id="loader"
+      >
+        <div class="spinner"></div>
+
+        <div class="loading-text">
+          Loading application...
+        </div>
+      </div>
+
+
+      <iframe
+        id="appFrame"
+        title="Plant Breeding-QUIZ"
+        src="https://script.google.com/macros/s/AKfycbyy7T8YqhgW3o9uWXJWmLHzUBpOTa-E712UIMDQcFZGXM6Dv0cBJ6N_WP8tt875c9yARA/exec"
+        allow="camera; microphone; geolocation; fullscreen"
+        loading="eager"
+      ></iframe>
+
+    </main>
+
+  </div>
+
+
+  <script>
+    const app = document.getElementById("app");
+    const iframe = document.getElementById("appFrame");
+    const loader = document.getElementById("loader");
+
+    const reloadBtn = document.getElementById("reloadBtn");
+    const fullscreenBtn = document.getElementById("fullscreenBtn");
+
+
+    /*
+     * Hide loading screen after iframe loads
+     */
+    iframe.addEventListener("load", function () {
+      setTimeout(() => {
+        loader.classList.add("hidden");
+      }, 300);
+    });
+
+
+    /*
+     * Reload iframe
+     */
+    reloadBtn.addEventListener("click", function () {
+
+      loader.classList.remove("hidden");
+
+      const currentSrc = iframe.src;
+
+      iframe.src = "";
+
+      setTimeout(() => {
+        iframe.src = currentSrc;
+      }, 50);
+
+    });
+
+
+    /*
+     * Fullscreen
+     */
+    fullscreenBtn.addEventListener("click", function () {
+
+      if (!document.fullscreenElement) {
+
+        if (app.requestFullscreen) {
+          app.requestFullscreen();
+        }
+
+        app.classList.add("fullscreen");
+
+        fullscreenBtn.textContent = "✕ Exit";
+
+      } else {
+
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+
+        app.classList.remove("fullscreen");
+
+        fullscreenBtn.textContent = "⛶ Fullscreen";
+
+      }
+
+    });
+
+
+    /*
+     * Keep button state synchronized
+     */
+    document.addEventListener("fullscreenchange", function () {
+
+      if (!document.fullscreenElement) {
+
+        app.classList.remove("fullscreen");
+
+        fullscreenBtn.textContent = "⛶ Fullscreen";
+
+      }
+
+    });
+
+
+    /*
+     * Prevent accidental page scrolling
+     */
+    document.body.addEventListener(
+      "touchmove",
+      function (event) {
+        if (event.target === document.body) {
+          event.preventDefault();
+        }
+      },
+      { passive: false }
+    );
+  </script>
+
+</body>
+</html>
